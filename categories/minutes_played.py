@@ -34,7 +34,7 @@ def minutes(df_pl, df_comps, team_name, matches_pl, matches_comp, fotmob_id):
     return df_pl, df_comps
 
 
-def minutes_combined():
+def minutes_combined(df_minutes_pl, df_minutes_comps):
     df_minutes_pl = get_minutes_all(df_minutes_pl)
     df_minutes_comps = get_minutes_all(df_minutes_comps)
 
