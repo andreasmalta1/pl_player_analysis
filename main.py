@@ -1,92 +1,99 @@
 import os
 import pandas as pd
 
-from plots_goals_assists import plt_g_a, plt_g_a_stacked
-from plots_minutes import plt_minutes, plt_minutes_all
+from categories.goals_assists import goals_and_assists, goals_and_assists_combined
+from categories.minutes_played import minutes, minutes_combined
+from utils import get_info, get_num_matches
 from teams import TEAMS
 
 pd.options.mode.chained_assignment = None
 
 
-def get_info(url):
-    html = pd.read_html(url, header=0)
-    df = html[0]
-    new_header = df.iloc[0]
-    df = df[1:]
-    df.columns = new_header
-    return df
+def nations():
+    # pl_url = "https://fbref.com/en/comps/9/nations/Premier-League-Nationalities"
+    # liga_url = "https://fbref.com/en/comps/12/nations/La-Liga-Nationalities"
+    # bundesliga_url = "https://fbref.com/en/comps/20/nations/Bundesliga-Nationalities"
+    # italy_url = "https://fbref.com/en/comps/11/nations/Serie-A-Nationalities"
+    # french_url = "https://fbref.com/en/comps/13/nations/Ligue-1-Nationalities"
+    # cl_url = "https://fbref.com/en/comps/8/nations/Champions-League-Nationalities"
+    # # uel_url = "https://fbref.com/en/comps/19/2022/nations/2022-Nationalities"
 
+    # league_urls = {
+    #     "epl": {"url": pl_url, "color": "mediumpurple"},
+    #     "laliga": {"url": liga_url, "color": "salmon"},
+    #     "bundesliga": {"url": bundesliga_url, "color": "lightcoral"},
+    #     "seriea": {"url": italy_url, "color": "lightcyan"},
+    #     "ligue1": {"url": french_url, "color": "lemonchiffon"},
+    #     "ucl": {"url": cl_url, "color": "cornflowerblue"},
+    #     # "uel": {"url": uel_url, "color": "orange"},
+    # }
 
-def get_matches(df):
-    df = df["Result"].tail(1)
-    total_games = df.iloc[0].split("-")
-    num_games = 0
-    for value in total_games:
-        num_games += int(value)
+    # df_total_times = pd.DataFrame(columns=["Nation", "Min"])
+    # df_total_players = pd.DataFrame(columns=["Nation", "# Players"])
+    # df_total_goals = pd.DataFrame(columns=["Nation", "Goals"])
+    # df = pd.DataFrame()
 
-    return num_games
+    # for competition in league_urls:
+    #     url = league_urls[competition]["url"]
+    #     color = league_urls[competition]["color"]
 
+    #     if competition == "epl":
+    #         comp_title = "Premier League"
+    #         goals_url = "https://fbref.com/en/comps/9/shooting/Premier-League-Stats"
+    #     if competition == "laliga":
+    #         comp_title = "La Liga"
+    #         goals_url = "https://fbref.com/en/comps/12/shooting/La-Liga-Stats"
+    #     if competition == "bundesliga":
+    #         comp_title = "Bundesliga"
+    #         goals_url = "https://fbref.com/en/comps/20/shooting/Bundesliga-Stats"
+    #     if competition == "seriea":
+    #         comp_title = "Serie A"
+    #         goals_url = "https://fbref.com/en/comps/11/shooting/Serie-A-Stats"
+    #     if competition == "ligue1":
+    #         comp_title = "Ligue 1"
+    #         goals_url = "https://fbref.com/en/comps/13/shooting/Ligue-1-Stats"
+    #     if competition == "ucl":
+    #         comp_title = "Uefa Champions League"
+    #         goals_url = "https://fbref.com/en/comps/8/shooting/Champions-League-Stats"
+    #     if competition == "uel":
+    #         comp_title = "Uefa Europa League"
+    #         goals_url = "https://fbref.com/en/comps/19/2022/shooting/2022-Stats"
 
-def get_goals_assists(df):
-    df = df[["Player", "Gls", "Ast", "G+A"]]
-    df.columns = ["Player", "Gls", "xG", "Ast", "xA", "G+A", "xG+xA"]
-    df = df[["Player", "Gls", "Ast", "G+A"]]
-    return df
+    #     html = pd.read_html(url, header=0)
+    #     df = html[0]
+    #     df = df.drop(["Rk", "List"], axis=1)
+    #     df["Nation"] = df["Nation"].str.split(" ", 1)
 
+    #     drop_rows = []
 
-def get_minutes(df):
-    df = df[["Player", "Nation", "Pos", "Age", "Min", "MP", "Starts", "90s"]]
-    df = df[~df["Min"].isna()]
-    df = df[~df["Min"].isna()]
-    df["Min"] = df["Min"].astype(float)
-    df = df[df["Min"] >= 400].reset_index(drop=True)
-    df = df.sort_values(by="Min").reset_index(drop=True)
-    df = df[~df["Pos"].isna()]
-    df["Nation"] = [x.split(" ")[1].lower() for x in df["Nation"]]
-    df["Min"] = [int(x) for x in df["Min"]]
-    return df
+    #     for index, row in df.iterrows():
+    #         row["Nation"] = row["Nation"].pop()
+    #         if row["# Players"] == "# Players":
+    #             drop_rows.append(index)
 
+    #     df = df.drop(labels=drop_rows)
 
-def get_minutes_all(df):
-    df = df.sort_values(by="Min").reset_index(drop=True)
-    df["Min"] = [int(x) for x in df["Min"]]
-    return df.tail(20)
+    #     df["# Players"] = df["# Players"].astype(float)
+    #     df["Min"] = df["Min"].astype(float)
 
+    #     df_players = df.sort_values(by=["# Players"])
+    #     df_players = df_players.drop(["Min"], axis=1)
+    #     if competition != "ucl" and competition != "uel":
+    #         df_total_players = pd.concat(
+    #             [df_total_players, df_players], ignore_index=True
+    #         )
 
-def goals_and_assists(df_pl, df_comps, team_name, fotmob_id):
-    df_pl = get_goals_assists(df_pl)
-    df_pl.drop(df_pl.tail(2).index, inplace=True)
-    df_comps = get_goals_assists(df_comps)
+    #     df_players = df_players.tail(10)
 
-    plt_g_a(df_pl, "Gls", "Goals", team_name, "#C4961A", fotmob_id, "pl")
-    plt_g_a(df_pl, "Ast", "Assists", team_name, "cadetblue", fotmob_id, "pl")
-    plt_g_a_stacked(df_pl, "G+A", "Goals + Assists", team_name, fotmob_id, "pl")
+    #     df_times = df
+    #     df_times = df_times.dropna()
+    #     df_times = df_times.sort_values(by=["Min"])
+    #     df_times = df_times.drop(["# Players"], axis=1)
+    #     if competition != "ucl" and competition != "uel":
+    #         df_total_times = pd.concat([df_total_times, df_times], ignore_index=True)
 
-    plt_g_a(df_comps, "Gls", "Goals", team_name, "#C4961A", fotmob_id, "comps")
-    plt_g_a(df_comps, "Ast", "Assists", team_name, "cadetblue", fotmob_id, "comps")
-    plt_g_a_stacked(
-        df_comps,
-        "G+A",
-        "Goals + Assists",
-        team_name,
-        fotmob_id,
-        "comps",
-    )
-
-    return df_pl, df_comps
-
-
-def minutes(df_pl, df_comps, team_name, matches_pl, matches_comp, fotmob_id):
-    df_pl = get_minutes(df_pl)
-    df_comps = get_minutes(df_comps)
-
-    plt_minutes(df_pl, team_name, matches_pl, fotmob_id, "pl")
-    plt_minutes(df_comps, team_name, matches_comp, fotmob_id, "comps")
-
-    df_pl["club_id"] = fotmob_id
-    df_comps["club_id"] = fotmob_id
-
-    return df_pl, df_comps
+    #     df_times = df_times.tail(10)
+    pass
 
 
 def main():
@@ -111,18 +118,15 @@ def main():
 
         df_pl = get_info(pl_url.format(fbref_id=fbref_id, team_name=team_name))
         df_comps = get_info(comps_url.format(fbref_id=fbref_id, team_name=team_name))
+        matches_pl = get_num_matches(
+            pl_games_url.format(fbref_id=fbref_id, team_name=team_name)
+        )
+        matches_comp = get_num_matches(
+            comps_games_url.format(fbref_id=fbref_id, team_name=team_name)
+        )
 
         if TEAMS[team_name].get("short_name"):
             team_name = TEAMS[team_name].get("short_name")
-
-        df_matches_pl = get_info(
-            pl_games_url.format(fbref_id=fbref_id, team_name=team_name)
-        )
-        df_matches_comp = get_info(
-            comps_games_url.format(fbref_id=fbref_id, team_name=team_name)
-        )
-        matches_pl = get_matches(df_matches_pl)
-        matches_comp = get_matches(df_matches_comp)
 
         df_pl_goals, df_comps_goals = goals_and_assists(
             df_pl, df_comps, team_name, fotmob_id
@@ -140,56 +144,10 @@ def main():
     df_goals_comps = pd.concat(comps_goal_list, axis=0, ignore_index=True)
     df_minutes_pl = pd.concat(pl_minutes_list, axis=0, ignore_index=True)
     df_minutes_comps = pd.concat(comps_minutes_list, axis=0, ignore_index=True)
-    df_minutes_pl = get_minutes_all(df_minutes_pl)
-    df_minutes_comps = get_minutes_all(df_minutes_comps)
-    plt_g_a(
-        df=df_goals_pl,
-        column_name="Gls",
-        label="Goals",
-        plot_color="#C4961A",
-        fotmob_id=47,
-        competition="pl",
-    )
-    plt_g_a(
-        df=df_goals_pl,
-        column_name="Ast",
-        label="Assists",
-        plot_color="cadetblue",
-        fotmob_id=47,
-        competition="pl",
-    )
-    plt_g_a_stacked(
-        df=df_goals_pl,
-        column_name="G+A",
-        label="Goals + Assists",
-        fotmob_id=47,
-        competition="pl",
-    )
-    plt_g_a(
-        df=df_goals_comps,
-        column_name="Gls",
-        label="Goals",
-        plot_color="#C4961A",
-        fotmob_id=47,
-        competition="comps",
-    )
-    plt_g_a(
-        df=df_goals_comps,
-        column_name="Ast",
-        label="Assists",
-        plot_color="cadetblue",
-        fotmob_id=47,
-        competition="comps",
-    )
-    plt_g_a_stacked(
-        df=df_goals_comps,
-        column_name="G+A",
-        label="Goals + Assists",
-        fotmob_id=47,
-        competition="comps",
-    )
-    plt_minutes_all(df_minutes_pl, "pl")
-    plt_minutes_all(df_minutes_comps, "comps")
+
+    goals_and_assists_combined(df_goals_pl, df_goals_comps)
+    minutes_combined(df_minutes_pl, df_minutes_comps)
+    nations()
 
 
 if __name__ == "__main__":
