@@ -24,14 +24,11 @@ def get_num_matches(url):
     return num_games
 
 
-def ax_logo(logo_id, ax):
-    fotmob_url_club = "https://images.fotmob.com/image_resources/logo/teamlogo/"
-    fotmob_url_league = "https://images.fotmob.com/image_resources/logo/leaguelogo/"
-
-    if logo_id == 47:
-        icon = Image.open(urllib.request.urlopen(f"{fotmob_url_league}{logo_id}.png"))
-    else:
-        icon = Image.open(urllib.request.urlopen(f"{fotmob_url_club}{logo_id}.png"))
+def ax_logo(logo_id, ax, league=False):
+    url = "https://images.fotmob.com/image_resources/logo/teamlogo/"
+    if league:
+        url = "https://images.fotmob.com/image_resources/logo/leaguelogo/"
+    icon = Image.open(urllib.request.urlopen(f"{url}{logo_id}.png"))
     ax.imshow(icon)
     ax.axis("off")
     return ax

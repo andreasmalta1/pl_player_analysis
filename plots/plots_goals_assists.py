@@ -16,6 +16,8 @@ def plt_g_a(
     if competition == "pl":
         comp_description = "Premier League"
 
+    league = False
+
     if label == "Goals":
         descriptor = "Scored"
     if label == "Assists":
@@ -38,6 +40,7 @@ def plt_g_a(
 
     if fotmob_id == 47:
         df = df.tail(30)
+        league = True
 
     fig = plt.figure(figsize=(8, 10), dpi=300, facecolor="#EFE9E6")
     ax = plt.subplot()
@@ -63,7 +66,7 @@ def plt_g_a(
         )
 
     logo_ax = fig.add_axes([0.60, 0.2, 0.2, 0.2])
-    ax_logo(fotmob_id, logo_ax)
+    ax_logo(fotmob_id, logo_ax, league)
 
     annotate_axis(ax)
 
@@ -90,6 +93,8 @@ def plt_g_a_stacked(
     if competition == "pl":
         comp_description = "Premier League"
 
+    league = False
+
     if label == "Goals":
         descriptor = "Scored"
     if label == "Assist":
@@ -113,6 +118,7 @@ def plt_g_a_stacked(
 
     if fotmob_id == 47:
         df = df.tail(30)
+        league = True
 
     players = df.Player.values.tolist()
     goals = df.Gls.values.tolist()
@@ -175,7 +181,7 @@ def plt_g_a_stacked(
     ax.legend(loc="lower right")
 
     logo_ax = fig.add_axes([0.60, 0.2, 0.2, 0.2])
-    ax_logo(fotmob_id, logo_ax)
+    ax_logo(fotmob_id, logo_ax, league)
 
     annotate_axis(ax)
 

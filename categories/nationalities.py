@@ -48,13 +48,13 @@ def nations():
     # uel_url = "https://fbref.com/en/comps/19/2022/nations/2022-Nationalities"
 
     league_urls = {
-        "epl": {"url": pl_url, "color": "mediumpurple"},
-        "laliga": {"url": liga_url, "color": "salmon"},
-        "bundesliga": {"url": bundesliga_url, "color": "lightcoral"},
-        "seriea": {"url": italy_url, "color": "lightcyan"},
-        "ligue1": {"url": french_url, "color": "lemonchiffon"},
-        "ucl": {"url": cl_url, "color": "cornflowerblue"},
-        # "uel": {"url": uel_url, "color": "orange"},
+        "epl": {"url": pl_url, "fotmob_id": 47},
+        "laliga": {"url": liga_url, "fotmob_id": 87},
+        "bundesliga": {"url": bundesliga_url, "fotmob_id": 54},
+        "seriea": {"url": italy_url, "fotmob_id": 55},
+        "ligue1": {"url": french_url, "fotmob_id": 53},
+        "ucl": {"url": cl_url, "fotmob_id": 42},
+        # "uel": {"url": uel_url, "fotmob_id": 73},
     }
 
     df_total_times = pd.DataFrame(columns=["Nation", "Min"])
@@ -64,7 +64,7 @@ def nations():
 
     for competition in league_urls:
         url = league_urls[competition]["url"]
-        color = league_urls[competition]["color"]
+        fotmob_id = league_urls[competition]["fotmob_id"]
 
         if competition == "epl":
             comp_title = "Premier League"
@@ -136,7 +136,9 @@ def nations():
             if country:
                 df_sum.at[i, "Nation"] = country
 
-        plt_nationalities(df_players, df_times, df_sum, competition, comp_title, color)
+        plt_nationalities(
+            df_players, df_times, df_sum, competition, comp_title, fotmob_id
+        )
 
     df_total_players = df_total_players.groupby("Nation", as_index=False).sum()
     df_total_players = df_total_players.sort_values(by=["# Players"])

@@ -276,7 +276,7 @@ def plt_minutes_all(df, competition):
     ax.set_axis_off()
 
     logo_ax = fig.add_axes([0.825, 0.89, 0.05, 0.05])
-    ax_logo(47, logo_ax)
+    ax_logo(47, logo_ax, True)
 
     fig.text(
         x=0.15,
