@@ -86,7 +86,7 @@ def nations():
             goals_url = "https://fbref.com/en/comps/8/shooting/Champions-League-Stats"
         if competition == "uel":
             comp_title = "Uefa Europa League"
-            goals_url = "https://fbref.com/en/comps/19/2022/shooting/2022-Stats"
+            goals_url = "https://fbref.com/en/comps/19/shooting/Europa-League-Stats"
 
         html = pd.read_html(url, header=0)
         df = html[0]
