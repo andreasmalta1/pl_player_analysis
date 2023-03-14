@@ -147,6 +147,8 @@ def nation_colours(col):
         "Turkey": "#E30A17",
         "Switzerland": "#FF0000",
         "Egypt": "#C8102E",
+        "United States": "#002868",
+        "Angola": "#C8102E",
     }
 
     clr = []
@@ -193,5 +195,7 @@ def dict_conversion(country):
         "cm CMR": "Cameroon",
         "ch SUI": "Switzerland",
         "eg EGY": "Egypt",
+        "tr Tur": "Turkey",
+        "ao Ang": "Angola",
     }
     return countries.get(country)

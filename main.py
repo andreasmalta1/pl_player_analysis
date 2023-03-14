@@ -69,6 +69,8 @@ def main():
 
 if __name__ == "__main__":
     main()
-
+# TODO
 # Check whether I can get goals without UC
 # Check about UEL
+# Add league logo
+# Modify backgrounds
