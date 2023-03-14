@@ -59,6 +59,13 @@ def annotate_axis(ax):
     return ax
 
 
+def remove_plot_border(ax):
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["bottom"].set_visible(False)
+    ax.spines["left"].set_visible(False)
+
+
 def save_figure(fig_name, dpi, transparency, face_color, bbox):
     plt.savefig(
         fig_name,
@@ -195,7 +202,7 @@ def dict_conversion(country):
         "cm CMR": "Cameroon",
         "ch SUI": "Switzerland",
         "eg EGY": "Egypt",
-        "tr Tur": "Turkey",
-        "ao Ang": "Angola",
+        "tr TUR": "Turkey",
+        "ao ANG": "Angola",
     }
     return countries.get(country)

@@ -73,4 +73,3 @@ if __name__ == "__main__":
 # Check whether I can get goals without UC
 # Check about UEL
 # Add league logo
-# Modify backgrounds

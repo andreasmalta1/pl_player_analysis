@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-from utils import annotate_axis, ax_logo, save_figure
+from utils import annotate_axis, ax_logo, save_figure, remove_plot_border
 
 
 def plt_g_a(
@@ -42,10 +42,7 @@ def plt_g_a(
     fig = plt.figure(figsize=(8, 10), dpi=300, facecolor="#EFE9E6")
     ax = plt.subplot()
     ax.set_facecolor("#EFE9E6")
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.spines["bottom"].set_visible(False)
-    ax.spines["left"].set_visible(False)
+    remove_plot_border(ax)
     ax.get_xaxis().set_ticks([])
     ax.set_title(
         title,
