@@ -1,16 +1,34 @@
+import pandas as pd
 import urllib.request
 import matplotlib.pyplot as plt
 from PIL import Image
 
 
-def ax_logo(logo_id, ax):
-    fotmob_url_club = "https://images.fotmob.com/image_resources/logo/teamlogo/"
-    fotmob_url_league = "https://images.fotmob.com/image_resources/logo/leaguelogo/"
+def get_info(url):
+    html = pd.read_html(url, header=0)
+    df = html[0]
+    new_header = df.iloc[0]
+    df = df[1:]
+    df.columns = new_header
+    return df
 
-    if logo_id == 47:
-        icon = Image.open(urllib.request.urlopen(f"{fotmob_url_league}{logo_id}.png"))
-    else:
-        icon = Image.open(urllib.request.urlopen(f"{fotmob_url_club}{logo_id}.png"))
+
+def get_num_matches(url):
+    df = get_info(url)
+    df = df["Result"].tail(1)
+    total_games = df.iloc[0].split("-")
+    num_games = 0
+    for value in total_games:
+        num_games += int(value)
+
+    return num_games
+
+
+def ax_logo(logo_id, ax, league=False):
+    url = "https://images.fotmob.com/image_resources/logo/teamlogo/"
+    if league:
+        url = "https://images.fotmob.com/image_resources/logo/leaguelogo/"
+    icon = Image.open(urllib.request.urlopen(f"{url}{logo_id}.png"))
     ax.imshow(icon)
     ax.axis("off")
     return ax
@@ -36,6 +54,13 @@ def annotate_axis(ax):
         va="top",
     )
     return ax
+
+
+def remove_plot_border(ax):
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["bottom"].set_visible(False)
+    ax.spines["left"].set_visible(False)
 
 
 def save_figure(fig_name, dpi, transparency, face_color, bbox):
@@ -78,3 +103,103 @@ def minutes_battery(ax, minutes, num_games):
         )
     ax.set_axis_off()
     return ax
+
+
+def nation_colours(col):
+    primary_colour = {
+        "Argentina": "#43A1D5",
+        "Nigeria": "#008751",
+        "Denmark": "#C60C30",
+        "Germany": "#000000",
+        "Belgium": "#E30613",
+        "France": "#21304D",
+        "Portugal": "#E42518",
+        "Norway": "#C8102E",
+        "Brazil": "#FFDC02",
+        "England": "#000040",
+        "Spain": "#8B0D11",
+        "Poland": "#DC143C",
+        "Italy": "#0064AA",
+        "Chile": "#0039A6",
+        "Senegal": "#11A335",
+        "Morocco": "#17A376",
+        "Algeria": "#007229",
+        "Canada": "#C5281C",
+        "Suriname": "#377E3F",
+        "Japan": "#000555",
+        "Austria": "#ED2939",
+        "Netherlands": "#F36C21",
+        "Israel": "#0038B8",
+        "Serbia": "#B72E3E",
+        "Croatia": "#ED1C24",
+        "Uruguay": "#55B5E5",
+        "Republic of Ireland": "#169B62",
+        "Wales": "#AE2630",
+        "Scotland": "#004B84",
+        "Colombia": "#FCD116",
+        "Kosovo": "#244AA5",
+        "Czech Republic": "#ED1B2C",
+        "Switzerland": "#D52B1E",
+        "Albania": "#E41E20",
+        "Côte d'Ivoire": "#FF8200",
+        "Mali": "#FCD116",
+        "Cameroon": "#479A50",
+        "Ghana": "#D40023",
+        "Bosnia": "#002F6C",
+        "Ukraine": "#FFD700",
+        "Cameroon": "#479A50",
+        "Turkey": "#E30A17",
+        "Switzerland": "#FF0000",
+        "Egypt": "#C8102E",
+        "United States": "#002868",
+        "Angola": "#C8102E",
+    }
+
+    clr = []
+    for team in col:
+        if team in primary_colour:
+            clr.append(primary_colour[team])
+        else:
+            print(team)
+    return clr
+
+
+def dict_conversion(country):
+    countries = {
+        "ar ARG": "Argentina",
+        "ng NGA": "Nigeria",
+        "dk DEN": "Denmark",
+        "de GER": "Germany",
+        "be BEL": "Belgium",
+        "fr FRA": "France",
+        "pt POR": "Portugal",
+        "no NOR": "Norway",
+        "br BRA": "Brazil",
+        "eng ENG": "England",
+        "es ESP": "Spain",
+        "pl POL": "Poland",
+        "it ITA": "Italy",
+        "cl CHI": "Chile",
+        "sn SEN": "Senegal",
+        "ma MAR": "Morocco",
+        "dz ALG": "Algeria",
+        "ca CAN": "Canada",
+        "sr SUR": "Suriname",
+        "jp JPN": "Japan",
+        "at AUT": "Austria",
+        "nl NED": "Netherlands",
+        "il ISR": "Israel",
+        "rs SRB": "Serbia",
+        "hr CRO": "Croatia",
+        "uy URU": "Uruguay",
+        "xk KVX": "Kosovo",
+        "ua UKR": "Ukraine",
+        "gh GHA": "Ghana",
+        "ba BIH": "Bosnia",
+        "cm CMR": "Cameroon",
+        "ch SUI": "Switzerland",
+        "eg EGY": "Egypt",
+        "tr TUR": "Turkey",
+        "ao ANG": "Angola",
+    }
+    return countries.get(country)
