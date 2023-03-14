@@ -39,22 +39,49 @@ def get_goals(url):
 
 
 def nations():
-    pl_url = "https://fbref.com/en/comps/9/nations/Premier-League-Nationalities"
-    liga_url = "https://fbref.com/en/comps/12/nations/La-Liga-Nationalities"
-    bundesliga_url = "https://fbref.com/en/comps/20/nations/Bundesliga-Nationalities"
-    italy_url = "https://fbref.com/en/comps/11/nations/Serie-A-Nationalities"
-    french_url = "https://fbref.com/en/comps/13/nations/Ligue-1-Nationalities"
-    cl_url = "https://fbref.com/en/comps/8/nations/Champions-League-Nationalities"
-    # uel_url = "https://fbref.com/en/comps/19/2022/nations/2022-Nationalities"
-
-    league_urls = {
-        "epl": {"url": pl_url, "fotmob_id": 47},
-        "laliga": {"url": liga_url, "fotmob_id": 87},
-        "bundesliga": {"url": bundesliga_url, "fotmob_id": 54},
-        "seriea": {"url": italy_url, "fotmob_id": 55},
-        "ligue1": {"url": french_url, "fotmob_id": 53},
-        "ucl": {"url": cl_url, "fotmob_id": 42},
-        # "uel": {"url": uel_url, "fotmob_id": 73},
+    leagues = {
+        "epl": {
+            "title": "Premier League",
+            "nations_url": "https://fbref.com/en/comps/9/nations/Premier-League-Nationalities",
+            "goals_url": "https://fbref.com/en/comps/9/shooting/Premier-League-Stats",
+            "fotmob_id": 47,
+        },
+        "laliga": {
+            "title": "La Liga",
+            "nations_url": "https://fbref.com/en/comps/12/nations/La-Liga-Nationalities",
+            "goals_url": "https://fbref.com/en/comps/12/shooting/La-Liga-Stats",
+            "fotmob_id": 87,
+        },
+        "bundesliga": {
+            "title": "Bundesliga",
+            "nations_url": "https://fbref.com/en/comps/20/nations/Bundesliga-Nationalities",
+            "goals_url": "https://fbref.com/en/comps/20/shooting/Bundesliga-Stats",
+            "fotmob_id": 54,
+        },
+        "seriea": {
+            "title": "Serie A",
+            "nations_url": "https://fbref.com/en/comps/11/nations/Serie-A-Nationalities",
+            "goals_url": "https://fbref.com/en/comps/11/shooting/Serie-A-Stats",
+            "fotmob_id": 55,
+        },
+        "ligue1": {
+            "title": "Ligue 1",
+            "nations_url": "https://fbref.com/en/comps/13/nations/Ligue-1-Nationalities",
+            "goals_url": "https://fbref.com/en/comps/13/shooting/Ligue-1-Stats",
+            "fotmob_id": 53,
+        },
+        "ucl": {
+            "title": "Uefa Champions League",
+            "nations_url": "https://fbref.com/en/comps/8/nations/Champions-League-Nationalities",
+            "goals_url": "https://fbref.com/en/comps/8/shooting/Champions-League-Stats",
+            "fotmob_id": 42,
+        },
+        # "uel": {
+        #     "title": "Uefa Europe Lague",
+        #     "nations_url": "https://fbref.com/en/comps/19/2022/nations/2022-Nationalities",
+        #     "goals_url": "https://fbref.com/en/comps/19/shooting/Europa-League-Stats",
+        #     "fotmob_id": 73,
+        # },
     }
 
     df_total_times = pd.DataFrame(columns=["Nation", "Min"])
@@ -62,33 +89,13 @@ def nations():
     df_total_goals = pd.DataFrame(columns=["Nation", "Goals"])
     df = pd.DataFrame()
 
-    for competition in league_urls:
-        url = league_urls[competition]["url"]
-        fotmob_id = league_urls[competition]["fotmob_id"]
+    for competition in leagues:
+        comp_title = leagues[competition]["title"]
+        nations_url = leagues[competition]["nations_url"]
+        goals_url = leagues[competition]["goals_url"]
+        fotmob_id = leagues[competition]["fotmob_id"]
 
-        if competition == "epl":
-            comp_title = "Premier League"
-            goals_url = "https://fbref.com/en/comps/9/shooting/Premier-League-Stats"
-        if competition == "laliga":
-            comp_title = "La Liga"
-            goals_url = "https://fbref.com/en/comps/12/shooting/La-Liga-Stats"
-        if competition == "bundesliga":
-            comp_title = "Bundesliga"
-            goals_url = "https://fbref.com/en/comps/20/shooting/Bundesliga-Stats"
-        if competition == "seriea":
-            comp_title = "Serie A"
-            goals_url = "https://fbref.com/en/comps/11/shooting/Serie-A-Stats"
-        if competition == "ligue1":
-            comp_title = "Ligue 1"
-            goals_url = "https://fbref.com/en/comps/13/shooting/Ligue-1-Stats"
-        if competition == "ucl":
-            comp_title = "Uefa Champions League"
-            goals_url = "https://fbref.com/en/comps/8/shooting/Champions-League-Stats"
-        if competition == "uel":
-            comp_title = "Uefa Europa League"
-            goals_url = "https://fbref.com/en/comps/19/shooting/Europa-League-Stats"
-
-        html = pd.read_html(url, header=0)
+        html = pd.read_html(nations_url, header=0)
         df = html[0]
         df = df.drop(["Rk", "List"], axis=1)
         df["Nation"] = df["Nation"].str.split(" ", 1)

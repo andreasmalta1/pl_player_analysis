@@ -1,5 +1,4 @@
 from plots.plots_minutes import plt_minutes, plt_minutes_all
-from utils import get_info
 
 
 def get_minutes(df):
