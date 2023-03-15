@@ -46,7 +46,7 @@ def plt_cards(
             fontweight="bold",
         )
 
-    logo_ax = fig.add_axes([0.65, 0.2, 0.2, 0.2])
+    logo_ax = fig.add_axes([0.68, 0.2, 0.2, 0.2])
     ax_logo(fotmob_id, logo_ax, True)
 
     annotate_axis(ax)
@@ -77,7 +77,7 @@ def plt_cards_stacked(
     title = f"{label} {comp_description} 22/23"
 
     df = df[df["Sum"] != 0]
-    df = df.sort_values("Sum")
+    df = df.sort_values(["Sum", "CrdR"])
     df = df.tail(30)
 
     players = df.Player.values.tolist()
@@ -140,7 +140,7 @@ def plt_cards_stacked(
 
     ax.legend(loc="lower right")
 
-    logo_ax = fig.add_axes([0.65, 0.2, 0.2, 0.2])
+    logo_ax = fig.add_axes([0.68, 0.2, 0.2, 0.2])
     ax_logo(fotmob_id, logo_ax, True)
 
     annotate_axis(ax)
