@@ -2,9 +2,12 @@ from plots.plots_goals_assists import plt_g_a, plt_g_a_stacked
 
 
 def get_goals_assists(df):
-    df = df[["Player", "Gls", "Ast", "G+A"]]
-    df.columns = ["Player", "Gls", "xG", "Ast", "xA", "G+A", "xG+xA"]
-    df = df[["Player", "Gls", "Ast", "G+A"]]
+    df = df[["Player", "MP", "Gls", "Ast", "G+A"]]
+    df.columns = ["Player", "MP", "Gls", "xG", "Ast", "xA", "G+A", "xG+xA"]
+    df = df[["Player", "MP", "Gls", "Ast", "G+A"]]
+
+    for i in df.index:
+        df.at[i, "Player"] = f"{df.at[i, 'Player']} ({df.at[i, 'MP']})"
     return df
 
 
