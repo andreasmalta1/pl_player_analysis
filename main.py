@@ -4,6 +4,7 @@ import pandas as pd
 from categories.goals_assists import goals_and_assists, goals_and_assists_combined
 from categories.minutes_played import minutes, minutes_combined
 from categories.nationalities import nations
+from categories.cards import get_cards_info, cards_combined
 from utils import get_info, get_num_matches
 from teams import TEAMS
 
@@ -17,17 +18,28 @@ def main():
     comps_games_url = "https://fbref.com/en/squads/{fbref_id}/2022-2023/matchlogs/all_comps/misc/{team_name}-Match-Logs-All-Competitions"
 
     for competition in ["pl", "comps"]:
-        for category in ["gls", "ast", "g+a", "minutes"]:
+        for category in ["gls", "ast", "g+a", "minutes", "cards"]:
             if not os.path.isdir(f"figures/{category}/{competition}"):
                 os.makedirs(f"figures/{category}/{competition}")
 
     if not os.path.isdir("figures/nationalities"):
         os.makedirs("figures/nationalities")
 
-    pl_goal_list = []
-    comps_goal_list = []
-    pl_minutes_list = []
-    comps_minutes_list = []
+    (
+        pl_goal_list,
+        comps_goal_list,
+        pl_minutes_list,
+        comps_minutes_list,
+        pl_cards_list,
+        comps_cards_list,
+    ) = (
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+    )
 
     for team_name in TEAMS:
         fbref_id = TEAMS[team_name]["fbref_id"]
@@ -51,20 +63,26 @@ def main():
         df_pl_minutes, df_comps_minutes = minutes(
             df_pl, df_comps, team_name, matches_pl, matches_comp, fotmob_id
         )
+        df_pl_cards, df_comps_cards = get_cards_info(df_pl, df_comps)
 
         pl_goal_list.append(df_pl_goals)
         comps_goal_list.append(df_comps_goals)
         pl_minutes_list.append(df_pl_minutes)
         comps_minutes_list.append(df_comps_minutes)
+        pl_cards_list.append(df_pl_cards)
+        comps_cards_list.append(df_comps_cards)
 
     df_goals_pl = pd.concat(pl_goal_list, axis=0, ignore_index=True)
     df_goals_comps = pd.concat(comps_goal_list, axis=0, ignore_index=True)
     df_minutes_pl = pd.concat(pl_minutes_list, axis=0, ignore_index=True)
     df_minutes_comps = pd.concat(comps_minutes_list, axis=0, ignore_index=True)
+    df_pl_cards = pd.concat(pl_cards_list, axis=0, ignore_index=True)
+    df_comps_cards = pd.concat(comps_cards_list, axis=0, ignore_index=True)
 
     goals_and_assists_combined(df_goals_pl, df_goals_comps)
     minutes_combined(df_minutes_pl, df_minutes_comps)
     nations()
+    cards_combined(df_pl_cards, df_comps_cards)
 
 
 if __name__ == "__main__":

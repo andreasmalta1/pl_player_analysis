@@ -161,7 +161,7 @@ def plt_g_a_stacked(
             value / 2,
             index,
             str(value),
-            color="cadetblue",
+            color="#000000",
             va="center",
             fontweight="bold",
         )
@@ -173,7 +173,7 @@ def plt_g_a_stacked(
             goals[index] + (value / 2),
             index,
             str(value),
-            color="#C4961A",
+            color="#000000",
             va="center",
             fontweight="bold",
         )
