@@ -2,7 +2,6 @@ import os
 import pandas as pd
 
 from categories.goals_assists import goals_and_assists, goals_and_assists_combined
-
 from categories.minutes_played import minutes, minutes_combined
 from categories.nationalities import nations
 from categories.cards import get_cards_info, cards_combined
@@ -12,11 +11,50 @@ from teams import TEAMS
 pd.options.mode.chained_assignment = None
 
 
-def main():
-    pl_url = "https://fbref.com/en/squads/{fbref_id}/{team_name}-Stats"
+def get_all_data():
+    league_url = "https://fbref.com/en/squads/{fbref_id}/{team_name}-Stats"
     comps_url = "https://fbref.com/en/squads/{fbref_id}/2022-2023/all_comps/{team_name}-Stats-All-Competitions"
-    pl_games_url = "https://fbref.com/en/squads/{fbref_id}/2022-2023/matchlogs/c9/misc/{team_name}-Match-Logs-Premier-League"
+    league_games_url = "https://fbref.com/en/squads/{fbref_id}/2022-2023/matchlogs/c9/misc/{team_name}-Match-Logs-Premier-League"
     comps_games_url = "https://fbref.com/en/squads/{fbref_id}/2022-2023/matchlogs/all_comps/misc/{team_name}-Match-Logs-All-Competitions"
+
+    leagues = ["epl", "laliga", "ligue1", "bundesliga", "seriea"]
+    for league in leagues:
+        if not os.path.isdir(f"csvs/{league}"):
+            os.makedirs(f"csvs/{league}")
+
+    for league in TEAMS:
+        for team_name in TEAMS[league]:
+            fbref_id = TEAMS[league][team_name]["fbref_id"]
+            if TEAMS[league][team_name].get("short_name"):
+                team_name = TEAMS[league][team_name].get("short_name")
+
+            df_league = get_info(
+                league_url.format(fbref_id=fbref_id, team_name=team_name)
+            )
+            df_comps = get_info(
+                comps_url.format(fbref_id=fbref_id, team_name=team_name)
+            )
+            df_league_matches = get_info(
+                league_games_url.format(fbref_id=fbref_id, team_name=team_name)
+            )
+            df_comps_matches = get_info(
+                comps_games_url.format(fbref_id=fbref_id, team_name=team_name)
+            )
+
+            file_path = f"csvs/{league}/{team_name.lower()}"
+
+            if not os.path.isdir(file_path):
+                os.makedirs(file_path)
+
+            df_league.to_csv(os.path.join(file_path, "league_info.csv"))
+            df_comps.to_csv(os.path.join(file_path, "comps_info.csv"))
+            df_league_matches.to_csv(os.path.join(file_path, "league_matches.csv"))
+            df_comps_matches.to_csv(os.path.join(file_path, "comps_matches.csv"))
+
+
+def main():
+    get_all_data()
+    return
 
     for competition in ["pl", "comps"]:
         for category in [
@@ -110,3 +148,9 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# TODO
+# Get fbref & fotmob info from all 5 teams
+# When saving csvs, save a combined for each league and a combined for all top 5 leagues
+# Add nationalities csvs
+# Clean up code
