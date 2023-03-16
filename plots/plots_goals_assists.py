@@ -159,29 +159,30 @@ def plt_g_a_stacked(
             fontweight="bold",
         )
 
-    for index, value in enumerate(goals):
-        if value == 0:
-            continue
-        plt.text(
-            value / 2,
-            index,
-            str(value),
-            color="#000000",
-            va="center",
-            fontweight="bold",
-        )
+    if "90" not in column_name:
+        for index, value in enumerate(goals):
+            if value == 0:
+                continue
+            plt.text(
+                value / 2,
+                index,
+                str(value),
+                color="#000000",
+                va="center",
+                fontweight="bold",
+            )
 
-    for index, value in enumerate(assists):
-        if value == 0:
-            continue
-        plt.text(
-            goals[index] + (value / 2),
-            index,
-            str(value),
-            color="#000000",
-            va="center",
-            fontweight="bold",
-        )
+        for index, value in enumerate(assists):
+            if value == 0:
+                continue
+            plt.text(
+                goals[index] + (value / 2),
+                index,
+                str(value),
+                color="#000000",
+                va="center",
+                fontweight="bold",
+            )
 
     ax.legend(loc="lower right")
 

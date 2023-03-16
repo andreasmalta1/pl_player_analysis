@@ -2,16 +2,21 @@ from plots.plots_goals_assists import plt_g_a, plt_g_a_stacked
 
 
 def get_goals_assists(df):
-    df = df[["Player", "MP", "Gls", "Ast", "G+A"]]
-    df.columns = ["Player", "MP", "Gls", "Gls90", "Ast", "Ast90", "G+A", "G+A90"]
+    df = df[["Player", "MP", "Min", "Gls", "Ast", "G+A"]]
+    df.columns = ["Player", "MP", "Min", "Gls", "Gls90", "Ast", "Ast90", "G+A", "G+A90"]
     df_total = df[["Player", "MP", "Gls", "Ast", "G+A"]]
 
-    for i in df.index:
+    for i in df_total.index:
         df_total.at[
             i, "Player"
         ] = f"{df_total.at[i, 'Player']} ({df_total.at[i, 'MP']})"
 
-    df_90 = df[["Player", "MP", "Gls90", "Ast90", "G+A90"]]
+    df_90 = df[["Player", "MP", "Min", "Gls90", "Ast90", "G+A90"]]
+    df_90["Min"] = df_90["Min"].astype(float)
+    df_90 = df_90[df_90["Min"] >= 400].reset_index(drop=True)
+
+    for i in df_90.index:
+        df_90.at[i, "Player"] = f"{df_90.at[i, 'Player']} ({df_90.at[i, 'MP']})"
 
     return df_total, df_90
 

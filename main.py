@@ -110,7 +110,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-# TODO:
-# Add minutes filter for per 90 values
-# In combined graph per 90, remove annoation for small values
