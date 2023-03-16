@@ -52,6 +52,7 @@ def plt_g_a(
         fontweight="bold",
         fontsize=12,
     )
+    ax.set_ylabel("Player (Matches Played)", fontweight="bold")
     ax.set_xlabel(f"{label} {descriptor}", fontweight="bold")
     ax.barh(df["Player"], df[column_name], align="center", color=plot_color)
     increment_value = df[column_name].iloc[0] * 0.02
@@ -127,16 +128,14 @@ def plt_g_a_stacked(
     fig = plt.figure(figsize=(8, 10), dpi=300, facecolor="#EFE9E6")
     ax = plt.subplot()
     ax.set_facecolor("#EFE9E6")
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.spines["bottom"].set_visible(False)
-    ax.spines["left"].set_visible(False)
+    remove_plot_border(ax)
     ax.get_xaxis().set_ticks([])
     ax.set_title(
         title,
         fontweight="bold",
         fontsize=12,
     )
+    ax.set_ylabel("Player (Matches Played)", fontweight="bold")
     ax.set_xlabel(f"{label} {descriptor}", fontweight="bold")
     ax.barh(players, goals, align="center", color="#C4961A", label="Goals")
     ax.barh(
