@@ -23,6 +23,42 @@ def get_all_data():
             os.makedirs(f"csvs/{league}")
 
     list_leagues_all, list_comps_all = [], []
+    COLUMNS = [
+        "Player",
+        "Nation",
+        "Pos",
+        "Age",
+        "MP",
+        "Starts",
+        "Min",
+        "90s",
+        "Gls",
+        "Ast",
+        "G+A",
+        "G-PK",
+        "PK",
+        "PKatt",
+        "CrdY",
+        "CrdR",
+        "xG",
+        "npxG",
+        "xAG",
+        "npxG+xAG",
+        "PrgC",
+        "PrgP",
+        "PrgR",
+        "Gls90",
+        "Ast90",
+        "G+A90",
+        "G-PK90",
+        "G+A-PK90",
+        "xG90",
+        "xAG90",
+        "xG+xAG90",
+        "npxG90",
+        "npxG+xAG90",
+        "Matches",
+    ]
 
     for league in TEAMS:
         list_league_combined, list_comps_combined = [], []
@@ -37,6 +73,8 @@ def get_all_data():
             df_comps = get_info(
                 comps_url.format(fbref_id=fbref_id, team_name=team_name)
             )
+            df_league.columns = COLUMNS
+            df_comps.columns = COLUMNS
             df_league_matches = get_info(
                 league_games_url.format(fbref_id=fbref_id, team_name=team_name)
             )
@@ -66,6 +104,19 @@ def get_all_data():
 
 def main():
     get_all_data()
+    return
+
+    df = pd.read_csv("csvs/epl/all_comps_info.csv")
+    # print(df)
+    duplicateRows = df[df.duplicated(["Player"])]
+    print(duplicateRows)
+    df.drop_duplicates(subset=["Player"], inplace=True)
+    df.to_csv("test.csv")
+    # print(df.columns)
+    # 10-6
+    # 17-16
+    # 762 players
+
     return
 
     for competition in ["pl", "comps"]:
