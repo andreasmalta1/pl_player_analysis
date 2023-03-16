@@ -18,12 +18,10 @@ def plt_g_a(
 
     league = False
 
-    if label == "Goals":
+    if label == "Goals" or label == "Goals / 90":
         descriptor = "Scored"
-    if label == "Assists":
+    if label == "Assists" or label == "Assists / 90":
         descriptor = "Provided"
-    if label == "Goals + Assists":
-        descriptor = "Leaderboard"
 
     if team_name:
         file_name = f"{team_name.replace('-', '_').lower()}_{column_name.lower()}"
@@ -34,7 +32,10 @@ def plt_g_a(
 
     df = df[["Player", column_name]]
     df = df[~df[column_name].isna()]
-    df[column_name] = df[column_name].astype(int)
+    if "90" not in column_name:
+        df[column_name] = df[column_name].astype(int)
+    else:
+        df[column_name] = df[column_name].astype(float)
     df = df[df[column_name] != 0]
     df = df.sort_values(column_name)
 
@@ -96,12 +97,7 @@ def plt_g_a_stacked(
 
     league = False
 
-    if label == "Goals":
-        descriptor = "Scored"
-    if label == "Assist":
-        descriptor = "Provided"
-    if label == "Goals + Assists":
-        descriptor = "Leaderboard"
+    descriptor = "Leaderboard"
 
     if team_name:
         file_name = f"{team_name.replace('-', '_').lower()}_{column_name.lower()}"
@@ -111,9 +107,15 @@ def plt_g_a_stacked(
         title = f"{label} {descriptor} {comp_description} 22/23"
 
     df = df[~df[column_name].isna()]
-    df[column_name] = df[column_name].astype(int)
-    df["Gls"] = df["Gls"].astype(int)
-    df["Ast"] = df["Ast"].astype(int)
+    if "90" not in column_name:
+        df[column_name] = df[column_name].astype(int)
+        df["Gls"] = df["Gls"].astype(int)
+        df["Ast"] = df["Ast"].astype(int)
+    else:
+        df[column_name] = df[column_name].astype(float)
+        df["Gls90"] = df["Gls90"].astype(float)
+        df["Ast90"] = df["Ast90"].astype(float)
+
     df = df[df[column_name] != 0]
     df = df.sort_values(column_name)
 
@@ -122,8 +124,12 @@ def plt_g_a_stacked(
         league = True
 
     players = df.Player.values.tolist()
-    goals = df.Gls.values.tolist()
-    assists = df.Ast.values.tolist()
+    if "90" not in column_name:
+        goals = df.Gls.values.tolist()
+        assists = df.Ast.values.tolist()
+    else:
+        goals = df.Gls90.values.tolist()
+        assists = df.Ast90.values.tolist()
 
     fig = plt.figure(figsize=(8, 10), dpi=300, facecolor="#EFE9E6")
     ax = plt.subplot()
@@ -153,29 +159,30 @@ def plt_g_a_stacked(
             fontweight="bold",
         )
 
-    for index, value in enumerate(goals):
-        if value == 0:
-            continue
-        plt.text(
-            value / 2,
-            index,
-            str(value),
-            color="#000000",
-            va="center",
-            fontweight="bold",
-        )
+    if "90" not in column_name:
+        for index, value in enumerate(goals):
+            if value == 0:
+                continue
+            plt.text(
+                value / 2,
+                index,
+                str(value),
+                color="#000000",
+                va="center",
+                fontweight="bold",
+            )
 
-    for index, value in enumerate(assists):
-        if value == 0:
-            continue
-        plt.text(
-            goals[index] + (value / 2),
-            index,
-            str(value),
-            color="#000000",
-            va="center",
-            fontweight="bold",
-        )
+        for index, value in enumerate(assists):
+            if value == 0:
+                continue
+            plt.text(
+                goals[index] + (value / 2),
+                index,
+                str(value),
+                color="#000000",
+                va="center",
+                fontweight="bold",
+            )
 
     ax.legend(loc="lower right")
 
