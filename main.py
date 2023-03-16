@@ -103,15 +103,19 @@ def get_all_data():
 
 
 def main():
-    get_all_data()
-    return
+    # get_all_data()
+    # return
 
     df = pd.read_csv("csvs/epl/all_comps_info.csv")
     # print(df)
-    duplicateRows = df[df.duplicated(["Player"])]
-    print(duplicateRows)
+    duplicates = df[df.duplicated(["Player"])]
+    print(duplicates)
     df.drop_duplicates(subset=["Player"], inplace=True)
-    df.to_csv("test.csv")
+
+    for row in range(len(df)):
+        print((df.iloc[row,].values))
+
+    # df.to_csv("test.csv")
     # print(df.columns)
     # 10-6
     # 17-16
@@ -218,3 +222,6 @@ if __name__ == "__main__":
 # Merge players with the same name (same fbref id)
 # Add nationalities csvs
 # Clean up code
+# Make values as ints and floats
+# Remove Nans
+# Ask on stack overflow
