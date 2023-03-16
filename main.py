@@ -22,7 +22,10 @@ def get_all_data():
         if not os.path.isdir(f"csvs/{league}"):
             os.makedirs(f"csvs/{league}")
 
+    list_leagues_all, list_comps_all = [], []
+
     for league in TEAMS:
+        list_league_combined, list_comps_combined = [], []
         for team_name in TEAMS[league]:
             fbref_id = TEAMS[league][team_name]["fbref_id"]
             if TEAMS[league][team_name].get("short_name"):
@@ -42,7 +45,6 @@ def get_all_data():
             )
 
             file_path = f"csvs/{league}/{team_name.lower()}"
-
             if not os.path.isdir(file_path):
                 os.makedirs(file_path)
 
@@ -50,6 +52,16 @@ def get_all_data():
             df_comps.to_csv(os.path.join(file_path, "comps_info.csv"))
             df_league_matches.to_csv(os.path.join(file_path, "league_matches.csv"))
             df_comps_matches.to_csv(os.path.join(file_path, "comps_matches.csv"))
+
+            list_league_combined.append(df_league)
+            list_comps_combined.append(df_comps)
+
+        file_path = f"csvs/{league}"
+
+        df_league_combined = pd.concat(list_league_combined, axis=0, ignore_index=True)
+        df_comps_combined = pd.concat(list_comps_combined, axis=0, ignore_index=True)
+        df_league_combined.to_csv(os.path.join(file_path, "all_league_info.csv"))
+        df_comps_combined.to_csv(os.path.join(file_path, "all_comps_info.csv"))
 
 
 def main():
@@ -152,5 +164,6 @@ if __name__ == "__main__":
 # TODO
 # Get fbref & fotmob info from all 5 teams
 # When saving csvs, save a combined for each league and a combined for all top 5 leagues
+# Merge players with the same name (same fbref id)
 # Add nationalities csvs
 # Clean up code
