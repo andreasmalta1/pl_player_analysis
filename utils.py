@@ -3,6 +3,31 @@ import urllib.request
 import matplotlib.pyplot as plt
 from PIL import Image
 
+from constants import AGGREGATOR, NINETY_COLUMNS
+
+
+def drop_rows(df, column, value):
+    return df[df[column] != value]
+
+
+def remove_duplicates(df):
+    duplicate_rows = df[df.duplicated(["Player"])]
+    df.drop_duplicates(subset=["Player"], inplace=True)
+    df = (
+        pd.concat([df, duplicate_rows])
+        .groupby(["Player"], as_index=False)
+        .agg(AGGREGATOR)
+    )
+
+    for column_name in NINETY_COLUMNS:
+        col_name = column_name[:-2]
+        for i in df.index:
+            df.at[i, column_name] = round(
+                (int(df.at[i, "col_name"]) / float(df.at[i, "90s"])),
+                2,
+            )
+    return df
+
 
 def get_info(url):
     html = pd.read_html(url, header=0)

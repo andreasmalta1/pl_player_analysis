@@ -1,11 +1,14 @@
 import os
 import pandas as pd
+import numpy as np
+import time
 
 from categories.goals_assists import goals_and_assists, goals_and_assists_combined
 from categories.minutes_played import minutes, minutes_combined
 from categories.nationalities import nations
 from categories.cards import get_cards_info, cards_combined
-from utils import get_info, get_num_matches
+from utils import get_info, get_num_matches, drop_rows, remove_duplicates
+from constants import COLUMNS, NINETY_COLUMNS, AGGREGATOR, TYPES_DICT
 from teams import TEAMS
 
 pd.options.mode.chained_assignment = None
@@ -23,47 +26,13 @@ def get_all_data():
             os.makedirs(f"csvs/{league}")
 
     list_leagues_all, list_comps_all = [], []
-    COLUMNS = [
-        "Player",
-        "Nation",
-        "Pos",
-        "Age",
-        "MP",
-        "Starts",
-        "Min",
-        "90s",
-        "Gls",
-        "Ast",
-        "G+A",
-        "G-PK",
-        "PK",
-        "PKatt",
-        "CrdY",
-        "CrdR",
-        "xG",
-        "npxG",
-        "xAG",
-        "npxG+xAG",
-        "PrgC",
-        "PrgP",
-        "PrgR",
-        "Gls90",
-        "Ast90",
-        "G+A90",
-        "G-PK90",
-        "G+A-PK90",
-        "xG90",
-        "xAG90",
-        "xG+xAG90",
-        "npxG90",
-        "npxG+xAG90",
-        "Matches",
-    ]
 
     for league in TEAMS:
         list_league_combined, list_comps_combined = [], []
         for team_name in TEAMS[league]:
+            print(team_name)
             fbref_id = TEAMS[league][team_name]["fbref_id"]
+            fotmob_id = TEAMS[league][team_name]["fotmob_id"]
             if TEAMS[league][team_name].get("short_name"):
                 team_name = TEAMS[league][team_name].get("short_name")
 
@@ -73,8 +42,26 @@ def get_all_data():
             df_comps = get_info(
                 comps_url.format(fbref_id=fbref_id, team_name=team_name)
             )
+            df_league.drop(columns=df_league.columns[-1], axis=1, inplace=True)
+            df_comps.drop(columns=df_comps.columns[-1], axis=1, inplace=True)
             df_league.columns = COLUMNS
             df_comps.columns = COLUMNS
+
+            drop_rows(df_league, "MP", "0")
+            drop_rows(df_comps, "MP", "0")
+            drop_rows(df_league, "90s", "0.0")
+            drop_rows(df_league, "90s", "0.0")
+
+            df_league = df_league.dropna().reset_index(drop=True)
+            df_comps = df_comps.dropna().reset_index(drop=True)
+
+            df_comps = df_comps.astype(TYPES_DICT)
+
+            df_league["club_name"] = team_name
+            df_comps["club_name"] = team_name
+            df_league["club_id"] = fotmob_id
+            df_comps["club_id"] = fotmob_id
+
             df_league_matches = get_info(
                 league_games_url.format(fbref_id=fbref_id, team_name=team_name)
             )
@@ -91,6 +78,8 @@ def get_all_data():
             df_league_matches.to_csv(os.path.join(file_path, "league_matches.csv"))
             df_comps_matches.to_csv(os.path.join(file_path, "comps_matches.csv"))
 
+            df_league.drop(NINETY_COLUMNS, axis=1)
+            df_comps.drop(NINETY_COLUMNS, axis=1)
             list_league_combined.append(df_league)
             list_comps_combined.append(df_comps)
 
@@ -98,28 +87,16 @@ def get_all_data():
 
         df_league_combined = pd.concat(list_league_combined, axis=0, ignore_index=True)
         df_comps_combined = pd.concat(list_comps_combined, axis=0, ignore_index=True)
+
+        remove_duplicates(df_league_combined)
+        remove_duplicates(df_comps_combined)
+
         df_league_combined.to_csv(os.path.join(file_path, "all_league_info.csv"))
         df_comps_combined.to_csv(os.path.join(file_path, "all_comps_info.csv"))
 
 
 def main():
-    # get_all_data()
-    # return
-
-    df = pd.read_csv("csvs/epl/all_comps_info.csv")
-    # print(df)
-    duplicates = df[df.duplicated(["Player"])]
-    print(duplicates)
-    df.drop_duplicates(subset=["Player"], inplace=True)
-
-    for row in range(len(df)):
-        print((df.iloc[row,].values))
-
-    # df.to_csv("test.csv")
-    # print(df.columns)
-    # 10-6
-    # 17-16
-    # 762 players
+    get_all_data()
 
     return
 
@@ -217,11 +194,8 @@ if __name__ == "__main__":
     main()
 
 # TODO
-# Get fbref & fotmob info from all 5 teams
+# Get fbref & fotmob info from all 5 leagues
 # When saving csvs, save a combined for each league and a combined for all top 5 leagues
 # Merge players with the same name (same fbref id)
 # Add nationalities csvs
 # Clean up code
-# Make values as ints and floats
-# Remove Nans
-# Ask on stack overflow
