@@ -47,14 +47,17 @@ def get_all_data():
             df_league.columns = COLUMNS
             df_comps.columns = COLUMNS
 
-            drop_rows(df_league, "MP", "0")
-            drop_rows(df_comps, "MP", "0")
-            drop_rows(df_league, "90s", "0.0")
-            drop_rows(df_league, "90s", "0.0")
+            # df_league = df_league.astype({"MP": "str", "90s": "str"})
+
+            df_league = drop_rows(df_league, "MP", "0")
+            df_league = drop_rows(df_league, "90s", "0.0")
+            df_comps = drop_rows(df_comps, "MP", "0")
+            df_comps = drop_rows(df_comps, "90s", "0.0")
 
             df_league = df_league.dropna().reset_index(drop=True)
             df_comps = df_comps.dropna().reset_index(drop=True)
 
+            df_league = df_league.astype(TYPES_DICT)
             df_comps = df_comps.astype(TYPES_DICT)
 
             df_league["club_name"] = team_name
@@ -88,8 +91,8 @@ def get_all_data():
         df_league_combined = pd.concat(list_league_combined, axis=0, ignore_index=True)
         df_comps_combined = pd.concat(list_comps_combined, axis=0, ignore_index=True)
 
-        remove_duplicates(df_league_combined)
-        remove_duplicates(df_comps_combined)
+        df_league_combined = remove_duplicates(df_league_combined)
+        df_comps_combined = remove_duplicates(df_comps_combined)
 
         df_league_combined.to_csv(os.path.join(file_path, "all_league_info.csv"))
         df_comps_combined.to_csv(os.path.join(file_path, "all_comps_info.csv"))
@@ -196,6 +199,5 @@ if __name__ == "__main__":
 # TODO
 # Get fbref & fotmob info from all 5 leagues
 # When saving csvs, save a combined for each league and a combined for all top 5 leagues
-# Merge players with the same name (same fbref id)
 # Add nationalities csvs
 # Clean up code

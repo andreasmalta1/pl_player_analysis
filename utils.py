@@ -7,7 +7,10 @@ from constants import AGGREGATOR, NINETY_COLUMNS
 
 
 def drop_rows(df, column, value):
-    return df[df[column] != value]
+    for i in df.index:
+        if df.at[i, column] == value:
+            df = df.drop([i])
+    return df
 
 
 def remove_duplicates(df):
@@ -21,11 +24,12 @@ def remove_duplicates(df):
 
     for column_name in NINETY_COLUMNS:
         col_name = column_name[:-2]
-        for i in df.index:
-            df.at[i, column_name] = round(
-                (int(df.at[i, "col_name"]) / float(df.at[i, "90s"])),
-                2,
-            )
+        if col_name in df.columns:
+            for i in df.index:
+                df.at[i, column_name] = round(
+                    (int(df.at[i, col_name]) / float(df.at[i, "90s"])),
+                    2,
+                )
     return df
 
 
