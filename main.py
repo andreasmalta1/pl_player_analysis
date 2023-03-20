@@ -1,203 +1,161 @@
 import os
 import pandas as pd
-import numpy as np
-import time
 
 from categories.goals_assists import goals_and_assists, goals_and_assists_combined
 from categories.minutes_played import minutes, minutes_combined
 from categories.nationalities import nations
-from categories.cards import get_cards_info, cards_combined
-from utils import get_info, get_num_matches, drop_rows, remove_duplicates
-from constants import COLUMNS, NINETY_COLUMNS, AGGREGATOR, TYPES_DICT
+from categories.cards import cards_combined
+from utils import get_info, drop_rows, remove_duplicates
+from constants import COLUMNS, NINETY_COLUMNS, TYPES_DICT, LEAGUES
 from teams import TEAMS
 
 pd.options.mode.chained_assignment = None
 
 
 def get_all_data():
-    league_url = "https://fbref.com/en/squads/{fbref_id}/{team_name}-Stats"
+    lge_url = "https://fbref.com/en/squads/{fbref_id}/{team_name}-Stats"
     comps_url = "https://fbref.com/en/squads/{fbref_id}/2022-2023/all_comps/{team_name}-Stats-All-Competitions"
-    league_games_url = "https://fbref.com/en/squads/{fbref_id}/2022-2023/matchlogs/c9/misc/{team_name}-Match-Logs-Premier-League"
+    lge_games_url = "https://fbref.com/en/squads/{fbref_id}/2022-2023/matchlogs/{lge_code}/misc/{team_name}-Match-Logs"
     comps_games_url = "https://fbref.com/en/squads/{fbref_id}/2022-2023/matchlogs/all_comps/misc/{team_name}-Match-Logs-All-Competitions"
 
-    leagues = ["epl", "laliga", "ligue1", "bundesliga", "seriea"]
-    for league in leagues:
-        if not os.path.isdir(f"csvs/{league}"):
-            os.makedirs(f"csvs/{league}")
+    for lge in LEAGUES:
+        if not os.path.isdir(f"csvs/{lge}"):
+            os.makedirs(f"csvs/{lge}")
 
-    list_leagues_all, list_comps_all = [], []
+    list_lges_all, list_comps_all = [], []
 
-    for league in TEAMS:
-        list_league_combined, list_comps_combined = [], []
-        for team_name in TEAMS[league]:
+    for lge in TEAMS:
+        list_lge_combined, list_comps_combined = [], []
+        lge_code = LEAGUES[lge]["lge_code"]
+
+        for team_name in TEAMS[lge]:
             print(team_name)
-            fbref_id = TEAMS[league][team_name]["fbref_id"]
-            fotmob_id = TEAMS[league][team_name]["fotmob_id"]
-            if TEAMS[league][team_name].get("short_name"):
-                team_name = TEAMS[league][team_name].get("short_name")
+            fbref_id = TEAMS[lge][team_name]["fbref_id"]
+            fotmob_id = TEAMS[lge][team_name]["fotmob_id"]
+            if TEAMS[lge][team_name].get("short_name"):
+                team_name = TEAMS[lge][team_name].get("short_name")
 
-            df_league = get_info(
-                league_url.format(fbref_id=fbref_id, team_name=team_name)
-            )
+            df_lge = get_info(lge_url.format(fbref_id=fbref_id, team_name=team_name))
             df_comps = get_info(
                 comps_url.format(fbref_id=fbref_id, team_name=team_name)
             )
-            df_league.drop(columns=df_league.columns[-1], axis=1, inplace=True)
+            df_lge.drop(columns=df_lge.columns[-1], axis=1, inplace=True)
             df_comps.drop(columns=df_comps.columns[-1], axis=1, inplace=True)
-            df_league.columns = COLUMNS
+            df_lge.columns = COLUMNS
             df_comps.columns = COLUMNS
 
-            # df_league = df_league.astype({"MP": "str", "90s": "str"})
-
-            df_league = drop_rows(df_league, "MP", "0")
-            df_league = drop_rows(df_league, "90s", "0.0")
+            df_lge = drop_rows(df_lge, "MP", "0")
+            df_lge = drop_rows(df_lge, "90s", "0.0")
             df_comps = drop_rows(df_comps, "MP", "0")
             df_comps = drop_rows(df_comps, "90s", "0.0")
 
-            df_league = df_league.dropna().reset_index(drop=True)
+            df_lge = df_lge.dropna().reset_index(drop=True)
             df_comps = df_comps.dropna().reset_index(drop=True)
 
-            df_league = df_league.astype(TYPES_DICT)
+            df_lge = df_lge.astype(TYPES_DICT)
             df_comps = df_comps.astype(TYPES_DICT)
 
-            df_league["club_name"] = team_name
+            df_lge["club_name"] = team_name
             df_comps["club_name"] = team_name
-            df_league["club_id"] = fotmob_id
+            df_lge["club_id"] = fotmob_id
             df_comps["club_id"] = fotmob_id
 
-            df_league_matches = get_info(
-                league_games_url.format(fbref_id=fbref_id, team_name=team_name)
+            df_lge_mth = get_info(
+                lge_games_url.format(
+                    fbref_id=fbref_id, league_code=lge_code, team_name=team_name
+                )
             )
-            df_comps_matches = get_info(
+            df_comps_mth = get_info(
                 comps_games_url.format(fbref_id=fbref_id, team_name=team_name)
             )
 
-            file_path = f"csvs/{league}/{team_name.lower()}"
+            file_path = f"csvs/{lge}/{team_name.lower()}"
             if not os.path.isdir(file_path):
                 os.makedirs(file_path)
 
-            df_league.to_csv(os.path.join(file_path, "league_info.csv"))
+            df_lge.to_csv(os.path.join(file_path, "league_info.csv"))
             df_comps.to_csv(os.path.join(file_path, "comps_info.csv"))
-            df_league_matches.to_csv(os.path.join(file_path, "league_matches.csv"))
-            df_comps_matches.to_csv(os.path.join(file_path, "comps_matches.csv"))
+            df_lge_mth.to_csv(os.path.join(file_path, "league_matches.csv"))
+            df_comps_mth.to_csv(os.path.join(file_path, "comps_matches.csv"))
 
-            df_league.drop(NINETY_COLUMNS, axis=1)
+            df_lge.drop(NINETY_COLUMNS, axis=1)
             df_comps.drop(NINETY_COLUMNS, axis=1)
-            list_league_combined.append(df_league)
+            list_lge_combined.append(df_lge)
             list_comps_combined.append(df_comps)
 
-        file_path = f"csvs/{league}"
+        file_path = f"csvs/{lge}"
 
-        df_league_combined = pd.concat(list_league_combined, axis=0, ignore_index=True)
+        df_lge_combined = pd.concat(list_lge_combined, axis=0, ignore_index=True)
         df_comps_combined = pd.concat(list_comps_combined, axis=0, ignore_index=True)
 
-        df_league_combined = remove_duplicates(df_league_combined)
+        df_lge_combined = remove_duplicates(df_lge_combined)
         df_comps_combined = remove_duplicates(df_comps_combined)
 
-        df_league_combined.to_csv(os.path.join(file_path, "all_league_info.csv"))
+        df_lge_combined.to_csv(os.path.join(file_path, "all_league_info.csv"))
         df_comps_combined.to_csv(os.path.join(file_path, "all_comps_info.csv"))
+
+        list_lges_all.append(df_lge_combined)
+        list_comps_all.append(df_comps_combined)
 
 
 def main():
-    get_all_data()
+    # get_all_data()
 
-    return
+    # return
 
-    for competition in ["pl", "comps"]:
-        for category in [
-            "gls",
-            "ast",
-            "g+a",
-            "gls90",
-            "ast90",
-            "g+a90",
-            "minutes",
-            "cards",
-        ]:
-            if not os.path.isdir(f"figures/{category}/{competition}"):
-                os.makedirs(f"figures/{category}/{competition}")
+    for lge in LEAGUES:
+        for competition in [lge, "comps"]:
+            for category in [
+                "gls",
+                "ast",
+                "g+a",
+                "gls90",
+                "ast90",
+                "g+a90",
+                "minutes",
+                "cards",
+            ]:
+                if not os.path.isdir(f"figures/{lge}/{category}/{competition}"):
+                    os.makedirs(f"figures/{lge}/{category}/{competition}")
 
     if not os.path.isdir("figures/nationalities"):
         os.makedirs("figures/nationalities")
 
-    (
-        pl_goal_list,
-        comps_goal_list,
-        pl_goal90_list,
-        comps_goal90_list,
-        pl_minutes_list,
-        comps_minutes_list,
-        pl_cards_list,
-        comps_cards_list,
-    ) = (
-        [],
-        [],
-        [],
-        [],
-        [],
-        [],
-        [],
-        [],
-    )
+    for lge in TEAMS:
+        for team_name in TEAMS[lge]:
+            fotmob_id = TEAMS[lge][team_name]["fotmob_id"]
+            if TEAMS[lge][team_name].get("short_name"):
+                team_name = TEAMS[lge][team_name].get("short_name")
 
-    for team_name in TEAMS:
-        fbref_id = TEAMS[team_name]["fbref_id"]
-        fotmob_id = TEAMS[team_name]["fotmob_id"]
+            df_lge = pd.read_csv(f"csvs/{lge}/{team_name}/league_info.csv")
+            df_comps = pd.read_csv(f"csvs/{lge}/{team_name}/comps_info.csv")
+            df_lge_mth = pd.read_csv(f"csvs/{lge}/{team_name}/league_matches.csv")
+            df_comps_mth = pd.read_csv(f"csvs/{lge}/{team_name}/comps_matches.csv")
 
-        df_pl = get_info(pl_url.format(fbref_id=fbref_id, team_name=team_name))
-        df_comps = get_info(comps_url.format(fbref_id=fbref_id, team_name=team_name))
-        matches_pl = get_num_matches(
-            pl_games_url.format(fbref_id=fbref_id, team_name=team_name)
-        )
-        matches_comp = get_num_matches(
-            comps_games_url.format(fbref_id=fbref_id, team_name=team_name)
-        )
+            goals_and_assists(df_lge, df_comps, team_name, fotmob_id, lge)
+            minutes(
+                df_lge, df_comps, df_lge_mth, df_comps_mth, team_name, fotmob_id, lge
+            )
 
-        if TEAMS[team_name].get("short_name"):
-            team_name = TEAMS[team_name].get("short_name")
+            df_lge = pd.read_csv(f"csvs/{lge}/all_league_info.csv")
+            df_comps = pd.read_csv(f"csvs/{lge}/all_comps_info.csv")
 
-        (
-            df_pl_goals_total,
-            df_pl_goals_90,
-            df_comps_goal_total,
-            df_comps_goal_90,
-        ) = goals_and_assists(df_pl, df_comps, team_name, fotmob_id)
-        df_pl_minutes, df_comps_minutes = minutes(
-            df_pl, df_comps, team_name, matches_pl, matches_comp, fotmob_id
-        )
-        df_pl_cards, df_comps_cards = get_cards_info(df_pl, df_comps)
+        goals_and_assists_combined(df_lge, df_comps, lge)
+        minutes_combined(df_lge, df_comps, lge)
+        cards_combined(df_lge, df_comps, lge)
 
-        pl_goal_list.append(df_pl_goals_total)
-        comps_goal_list.append(df_comps_goal_total)
-        pl_goal90_list.append(df_pl_goals_90)
-        comps_goal90_list.append(df_comps_goal_90)
-        pl_minutes_list.append(df_pl_minutes)
-        comps_minutes_list.append(df_comps_minutes)
-        pl_cards_list.append(df_pl_cards)
-        comps_cards_list.append(df_comps_cards)
-
-    df_goals_pl = pd.concat(pl_goal_list, axis=0, ignore_index=True)
-    df_goals_comps = pd.concat(comps_goal_list, axis=0, ignore_index=True)
-    df_goals_90_pl = pd.concat(pl_goal90_list, axis=0, ignore_index=True)
-    df_goals_90_comps = pd.concat(comps_goal90_list, axis=0, ignore_index=True)
-    df_minutes_pl = pd.concat(pl_minutes_list, axis=0, ignore_index=True)
-    df_minutes_comps = pd.concat(comps_minutes_list, axis=0, ignore_index=True)
-    df_pl_cards = pd.concat(pl_cards_list, axis=0, ignore_index=True)
-    df_comps_cards = pd.concat(comps_cards_list, axis=0, ignore_index=True)
-
-    goals_and_assists_combined(
-        df_goals_pl, df_goals_comps, df_goals_90_pl, df_goals_90_comps
-    )
-    minutes_combined(df_minutes_pl, df_minutes_comps)
-    nations()
-    cards_combined(df_pl_cards, df_comps_cards)
+    # nations()
 
 
 if __name__ == "__main__":
     main()
 
 # TODO
-# Get fbref & fotmob info from all 5 leagues
-# When saving csvs, save a combined for each league and a combined for all top 5 leagues
-# Add nationalities csvs
-# Clean up code
+# 1. Make graphs using csvs
+# Working. But duplicates in la liga getting wrong copies
+# print duplicates
+# 2. Get all teams in teams.py
+# 3. Get a combined csv
+# 4. Get nationalities csvs
+# 5. Clean up code and refactor
+# 6. Add plot types

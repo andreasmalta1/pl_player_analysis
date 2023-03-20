@@ -42,17 +42,6 @@ def get_info(url):
     return df
 
 
-def get_num_matches(url):
-    df = get_info(url)
-    df = df["Result"].tail(1)
-    total_games = df.iloc[0].split("-")
-    num_games = 0
-    for value in total_games:
-        num_games += int(value)
-
-    return num_games
-
-
 def ax_logo(logo_id, ax, league=False):
     url = "https://images.fotmob.com/image_resources/logo/teamlogo/"
     if league:

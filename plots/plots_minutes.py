@@ -1,12 +1,13 @@
 import matplotlib.pyplot as plt
 
 from utils import annotate_axis, ax_logo, minutes_battery, save_figure
+from constants import LEAGUES
 
 
-def plt_minutes(df_final, team_name, num_games, team_id, competition):
+def plt_minutes(df_final, team_name, num_games, team_id, lge, comp):
     comp_description = "All Comps"
-    if competition == "pl":
-        comp_description = "Premier League"
+    if comp != "comps":
+        comp_description = LEAGUES.get(comp).get("lge_name")
 
     fig = plt.figure(figsize=(8, 10), dpi=300, facecolor="#EFE9E6")
     ax = plt.subplot()
@@ -144,7 +145,7 @@ def plt_minutes(df_final, team_name, num_games, team_id, competition):
     annotate_axis(ax)
 
     save_figure(
-        f"figures/minutes/{competition}/{team_name.replace('-', '_').lower()}.png",
+        f"figures/{lge}/minutes/{comp}/{team_name.replace('-', '_').lower()}.png",
         300,
         False,
         "#EFE9E6",
@@ -154,10 +155,11 @@ def plt_minutes(df_final, team_name, num_games, team_id, competition):
     plt.close()
 
 
-def plt_minutes_all(df, competition):
-    comp_description = "All Competitions"
-    if competition == "pl":
-        comp_description = "Premier League"
+def plt_minutes_all(df, lge, comp):
+    comp_description = "All Comps"
+    if comp != "comps":
+        comp_description = LEAGUES.get(comp).get("lge_name")
+    lge_id = LEAGUES.get(lge).get("fotmob_id")
 
     fig = plt.figure(figsize=(8, 10), dpi=300, facecolor="#EFE9E6")
     ax = plt.subplot()
@@ -276,7 +278,7 @@ def plt_minutes_all(df, competition):
     ax.set_axis_off()
 
     logo_ax = fig.add_axes([0.825, 0.89, 0.05, 0.05])
-    ax_logo(47, logo_ax, True)
+    ax_logo(lge_id, logo_ax, True)
 
     fig.text(
         x=0.15,
@@ -291,7 +293,11 @@ def plt_minutes_all(df, competition):
     annotate_axis(ax)
 
     save_figure(
-        f"figures/minutes/{competition}/all_clubs.png", 300, False, "#EFE9E6", "tight"
+        f"figures/{lge}/minutes/{comp}/all_clubs.png",
+        300,
+        False,
+        "#EFE9E6",
+        "tight",
     )
 
     plt.close()
