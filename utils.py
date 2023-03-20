@@ -3,6 +3,35 @@ import urllib.request
 import matplotlib.pyplot as plt
 from PIL import Image
 
+from constants import AGGREGATOR, NINETY_COLUMNS
+
+
+def drop_rows(df, column, value):
+    for i in df.index:
+        if df.at[i, column] == value:
+            df = df.drop([i])
+    return df
+
+
+def remove_duplicates(df):
+    duplicate_rows = df[df.duplicated(["Player"])]
+    df.drop_duplicates(subset=["Player"], inplace=True)
+    df = (
+        pd.concat([df, duplicate_rows])
+        .groupby(["Player"], as_index=False)
+        .agg(AGGREGATOR)
+    )
+
+    for column_name in NINETY_COLUMNS:
+        col_name = column_name[:-2]
+        if col_name in df.columns:
+            for i in df.index:
+                df.at[i, column_name] = round(
+                    (int(df.at[i, col_name]) / float(df.at[i, "90s"])),
+                    2,
+                )
+    return df
+
 
 def get_info(url):
     html = pd.read_html(url, header=0)
@@ -11,17 +40,6 @@ def get_info(url):
     df = df[1:]
     df.columns = new_header
     return df
-
-
-def get_num_matches(url):
-    df = get_info(url)
-    df = df["Result"].tail(1)
-    total_games = df.iloc[0].split("-")
-    num_games = 0
-    for value in total_games:
-        num_games += int(value)
-
-    return num_games
 
 
 def ax_logo(logo_id, ax, league=False):

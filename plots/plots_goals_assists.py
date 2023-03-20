@@ -1,20 +1,13 @@
 import matplotlib.pyplot as plt
 
 from utils import annotate_axis, ax_logo, save_figure, remove_plot_border
+from constants import LEAGUES
 
 
-def plt_g_a(
-    df=None,
-    column_name="Gls",
-    label="Goals",
-    team_name=None,
-    plot_color="cadetblue",
-    fotmob_id="47",
-    competition="pl",
-):
-    comp_description = "All Competitions"
-    if competition == "pl":
-        comp_description = "Premier League"
+def plt_g_a(df, column_name, label, team_name, plot_color, fotmob_id, lge, comp):
+    comp_description = "All Comps"
+    if comp != "comps":
+        comp_description = LEAGUES.get(comp).get("lge_name")
 
     league = False
 
@@ -39,7 +32,7 @@ def plt_g_a(
     df = df[df[column_name] != 0]
     df = df.sort_values(column_name)
 
-    if fotmob_id == 47:
+    if fotmob_id == LEAGUES[lge]["fotmob_id"]:
         df = df.tail(30)
         league = True
 
@@ -73,7 +66,7 @@ def plt_g_a(
     annotate_axis(ax)
 
     save_figure(
-        f"figures/{column_name.lower()}/{competition}/{file_name}.png",
+        f"figures/{lge}/{column_name.lower()}/{comp}/{file_name}.png",
         300,
         False,
         "#EFE9E6",
@@ -83,17 +76,10 @@ def plt_g_a(
     plt.close()
 
 
-def plt_g_a_stacked(
-    df=None,
-    column_name="Gls",
-    label="Goals",
-    team_name=None,
-    fotmob_id="47",
-    competition="pl",
-):
-    comp_description = "All Competitions"
-    if competition == "pl":
-        comp_description = "Premier League"
+def plt_g_a_stacked(df, column_name, label, team_name, fotmob_id, lge, comp):
+    comp_description = "All Comps"
+    if comp != "comps":
+        comp_description = LEAGUES.get(comp).get("lge_name")
 
     league = False
 
@@ -119,7 +105,7 @@ def plt_g_a_stacked(
     df = df[df[column_name] != 0]
     df = df.sort_values(column_name)
 
-    if fotmob_id == 47:
+    if fotmob_id == LEAGUES[lge]["fotmob_id"]:
         df = df.tail(30)
         league = True
 
@@ -192,7 +178,7 @@ def plt_g_a_stacked(
     annotate_axis(ax)
 
     save_figure(
-        f"figures/{column_name.lower()}/{competition}/{file_name}.png",
+        f"figures/{lge}/{column_name.lower()}/{comp}/{file_name}.png",
         300,
         False,
         "#EFE9E6",

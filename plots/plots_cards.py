@@ -1,26 +1,18 @@
 import matplotlib.pyplot as plt
 
 from utils import annotate_axis, ax_logo, save_figure, remove_plot_border
+from constants import LEAGUES
 
 
-def plt_cards(
-    df=None,
-    column_name="CrdY",
-    label="Yellow",
-    plot_color="yellow",
-    competition="pl",
-):
-    comp_description = "All Competitions"
-    if competition == "pl":
-        comp_description = "Premier League"
-
-    fotmob_id = 47
+def plt_cards(df, column_name, label, plot_color, fotmob_id, lge, comp):
+    comp_description = "All Comps"
+    if comp != "comps":
+        comp_description = LEAGUES.get(comp).get("lge_name")
 
     title = f"{label} Cards {comp_description} 22/23"
 
     df = df[df[column_name] != 0]
     df = df.sort_values(column_name)
-
     df = df.tail(30)
 
     fig = plt.figure(figsize=(8, 10), dpi=300, facecolor="#EFE9E6")
@@ -52,7 +44,7 @@ def plt_cards(
     annotate_axis(ax)
 
     save_figure(
-        f"figures/cards/{competition}/{label.lower()}.png",
+        f"figures/{lge}/cards/{comp}/{label.lower()}.png",
         300,
         False,
         "#EFE9E6",
@@ -62,18 +54,12 @@ def plt_cards(
     plt.close()
 
 
-def plt_cards_stacked(
-    df=None,
-    label="Disciplinary Record",
-    competition="pl",
-):
-    comp_description = "All Competitions"
-    if competition == "pl":
-        comp_description = "Premier League"
+def plt_cards_stacked(df, fotmob_id, lge, comp):
+    comp_description = "All Comps"
+    if comp != "comps":
+        comp_description = LEAGUES.get(comp).get("lge_name")
 
     label = "Disciplinary Record"
-    fotmob_id = 47
-
     title = f"{label} {comp_description} 22/23"
 
     df = df[df["Sum"] != 0]
@@ -146,7 +132,7 @@ def plt_cards_stacked(
     annotate_axis(ax)
 
     save_figure(
-        f"figures/cards/{competition}/all_cards.png",
+        f"figures/{lge}/cards/{comp}/all_cards.png",
         300,
         False,
         "#EFE9E6",
