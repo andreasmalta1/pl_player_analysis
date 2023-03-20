@@ -62,7 +62,7 @@ def get_all_data():
 
             df_lge_mth = get_info(
                 lge_games_url.format(
-                    fbref_id=fbref_id, league_code=lge_code, team_name=team_name
+                    fbref_id=fbref_id, lge_code=lge_code, team_name=team_name
                 )
             )
             df_comps_mth = get_info(
@@ -99,7 +99,7 @@ def get_all_data():
 
 
 def main():
-    # get_all_data()
+    get_all_data()
 
     # return
 
