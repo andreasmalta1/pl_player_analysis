@@ -4,7 +4,7 @@ from utils import annotate_axis, ax_logo, minutes_battery, save_figure
 from constants import LEAGUES
 
 
-def plt_minutes(df_final, team_name, num_games, team_id, lge, comp):
+def plt_minutes(df, team_name, num_games, team_id, lge, comp):
     comp_description = "All Comps"
     if comp != "comps":
         comp_description = LEAGUES.get(comp).get("lge_name")
@@ -13,7 +13,7 @@ def plt_minutes(df_final, team_name, num_games, team_id, lge, comp):
     ax = plt.subplot()
 
     ncols = 8
-    nrows = df_final.shape[0]
+    nrows = df.shape[0]
 
     ax.set_xlim(0, ncols + 1)
     ax.set_ylim(0, nrows + 1)
@@ -23,6 +23,8 @@ def plt_minutes(df_final, team_name, num_games, team_id, lge, comp):
 
     for i in range(nrows):
         for j, column in enumerate(columns):
+            fontsize = 10
+
             if j == 0:
                 ha = "left"
             else:
@@ -31,7 +33,7 @@ def plt_minutes(df_final, team_name, num_games, team_id, lge, comp):
             if column == "Mins":
                 continue
 
-            text_label = f"{df_final[column].iloc[i]}"
+            text_label = f"{df[column].iloc[i]}"
             weight = "normal"
 
             if column == "Pos":
@@ -40,12 +42,19 @@ def plt_minutes(df_final, team_name, num_games, team_id, lge, comp):
             if column == "Age":
                 text_label = text_label[:2]
 
+            if len(text_label) > 17:
+                fontsize = 8
+
+            if len(text_label) > 25:
+                fontsize = 6
+
             ax.annotate(
                 xy=(positions[j], i + 0.5),
                 text=text_label,
                 ha=ha,
                 va="center",
                 weight=weight,
+                fontsize=fontsize,
             )
 
     DC_to_FC = ax.transData.transform
@@ -61,7 +70,7 @@ def plt_minutes(df_final, team_name, num_games, team_id, lge, comp):
     for x in range(0, nrows):
         ax_coords = DC_to_NFC([2.25, x + 0.25])
         flag_ax = fig.add_axes([ax_coords[0], ax_coords[1], ax_width, ax_height])
-        ax_logo(df_final["Nation"].iloc[x], flag_ax)
+        ax_logo(df["Nation"].iloc[x], flag_ax)
 
     ax_point_1 = DC_to_NFC([4, 0.05])
     ax_point_2 = DC_to_NFC([5, 0.95])
@@ -71,7 +80,7 @@ def plt_minutes(df_final, team_name, num_games, team_id, lge, comp):
     for x in range(0, nrows):
         ax_coords = DC_to_NFC([7, x + 0.025])
         bar_ax = fig.add_axes([ax_coords[0], ax_coords[1], ax_width, ax_height])
-        minutes_battery(bar_ax, df_final["Min"].iloc[x], num_games)
+        minutes_battery(bar_ax, df["Min"].iloc[x], num_games)
 
     column_names = [
         "Player",
@@ -175,10 +184,15 @@ def plt_minutes_all(df, lge, comp):
 
     for i in range(nrows):
         for j, column in enumerate(columns):
+            fontsize = 10
+
             if j == 0:
                 ha = "left"
             else:
                 ha = "center"
+
+            if column == "Mins":
+                continue
 
             text_label = f"{df[column].iloc[i]}"
             weight = "normal"
@@ -189,12 +203,19 @@ def plt_minutes_all(df, lge, comp):
             if column == "Age":
                 text_label = text_label[:2]
 
+            if len(text_label) > 17:
+                fontsize = 8
+
+            if len(text_label) > 25:
+                fontsize = 6
+
             ax.annotate(
                 xy=(positions[j], i + 0.5),
                 text=text_label,
                 ha=ha,
                 va="center",
                 weight=weight,
+                fontsize=fontsize,
             )
 
     DC_to_FC = ax.transData.transform

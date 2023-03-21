@@ -60,6 +60,9 @@ def get_all_data():
             df_lge["club_id"] = fotmob_id
             df_comps["club_id"] = fotmob_id
 
+            df_lge = df_lge.replace("gf GUF", "fr FRA")
+            df_comps = df_comps.replace("gf GUF", "fr FRA")
+
             df_lge_mth = get_info(
                 lge_games_url.format(
                     fbref_id=fbref_id, lge_code=lge_code, team_name=team_name
@@ -99,7 +102,7 @@ def get_all_data():
 
 
 def main():
-    get_all_data()
+    # get_all_data()
 
     # return
 
@@ -151,11 +154,9 @@ if __name__ == "__main__":
     main()
 
 # TODO
-# 1. Make graphs using csvs
-# Working. But duplicates in la liga getting wrong copies
+# Duplicates in la liga getting wrong copies
 # print duplicates
-# 2. Get all teams in teams.py
-# 3. Get a combined csv
+# 3. Get a combined csv and combined data
 # 4. Get nationalities csvs
 # 5. Clean up code and refactor
 # 6. Add plot types
