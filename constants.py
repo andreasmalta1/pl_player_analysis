@@ -84,6 +84,7 @@ AGGREGATOR = {
     "PrgR": "sum",
     "club_name": "first",
     "club_id": "first",
+    "lge": "first",
 }
 
 TYPES_DICT = {

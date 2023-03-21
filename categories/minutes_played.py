@@ -1,4 +1,4 @@
-from plots.plots_minutes import plt_minutes, plt_minutes_all
+from plots.plots_minutes import plt_minutes, plt_minutes_all, plt_minutes_lges
 
 
 def get_num_matches(df):
@@ -36,5 +36,12 @@ def minutes_combined(df_lge, df_comps, lge):
     df_lge = get_minutes(df_lge)
     df_comps = get_minutes(df_comps)
 
-    plt_minutes_all(df_lge.tail(20), lge, lge)
-    plt_minutes_all(df_comps.tail(20), lge, "comps")
+    df_lge = df_lge.tail(20)
+    df_comps = df_comps.tail(20)
+
+    if lge:
+        plt_minutes_all(df_lge, lge, lge)
+        plt_minutes_all(df_comps, lge, "comps")
+    else:
+        plt_minutes_lges(df_lge, "lge")
+        plt_minutes_lges(df_comps, "comps")

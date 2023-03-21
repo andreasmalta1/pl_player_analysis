@@ -57,8 +57,12 @@ def get_all_data():
 
             df_lge["club_name"] = team_name
             df_comps["club_name"] = team_name
+
             df_lge["club_id"] = fotmob_id
             df_comps["club_id"] = fotmob_id
+
+            df_lge["lge"] = lge
+            df_comps["lge"] = lge
 
             df_lge = df_lge.replace("gf GUF", "fr FRA")
             df_comps = df_comps.replace("gf GUF", "fr FRA")
@@ -100,11 +104,19 @@ def get_all_data():
         list_lges_all.append(df_lge_combined)
         list_comps_all.append(df_comps_combined)
 
+    file_path = f"csvs"
+    df_lge_all = pd.concat(list_lges_all, axis=0, ignore_index=True)
+    df_comps_all = pd.concat(list_comps_all, axis=0, ignore_index=True)
+
+    df_lge_all = remove_duplicates(df_lge_all)
+    df_comps_all = remove_duplicates(df_comps_all)
+
+    df_lge_all.to_csv(os.path.join(file_path, "all_leagues_info.csv"))
+    df_comps_all.to_csv(os.path.join(file_path, "all_comps_info.csv"))
+
 
 def main():
     # get_all_data()
-
-    # return
 
     for lge in LEAGUES:
         for competition in [lge, "comps"]:
@@ -126,6 +138,7 @@ def main():
 
     for lge in TEAMS:
         for team_name in TEAMS[lge]:
+            print(team_name)
             fotmob_id = TEAMS[lge][team_name]["fotmob_id"]
             if TEAMS[lge][team_name].get("short_name"):
                 team_name = TEAMS[lge][team_name].get("short_name")
@@ -146,6 +159,10 @@ def main():
         goals_and_assists_combined(df_lge, df_comps, lge)
         minutes_combined(df_lge, df_comps, lge)
         cards_combined(df_lge, df_comps, lge)
+
+    df_lge = pd.read_csv(f"csvs/all_leagues_info.csv")
+    df_comps = pd.read_csv(f"csvs/all_comps_info.csv")
+    minutes_combined(df_lge, df_comps, None)
 
     # nations()
 
