@@ -67,6 +67,16 @@ def get_all_data():
             df_lge = df_lge.replace("gf GUF", "fr FRA")
             df_comps = df_comps.replace("gf GUF", "fr FRA")
 
+            for i in df_lge.index:
+                df_lge.at[i, "Gls"] = int(df_lge.at[i, "Gls"]) + int(
+                    df_lge.at[i, "Ast"]
+                )
+
+            for i in df_comps.index:
+                df_comps.at[i, "G+A"] = int(df_comps.at[i, "Gls"]) + int(
+                    df_comps.at[i, "Ast"]
+                )
+
             df_lge_mth = get_info(
                 lge_games_url.format(
                     fbref_id=fbref_id, lge_code=lge_code, team_name=team_name
@@ -116,7 +126,7 @@ def get_all_data():
 
 
 def main():
-    # get_all_data()
+    get_all_data()
 
     for lge in LEAGUES:
         for competition in [lge, "comps"]:
