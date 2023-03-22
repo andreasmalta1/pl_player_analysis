@@ -1,4 +1,9 @@
-from plots.plots_goals_assists import plt_g_a, plt_g_a_stacked
+from plots.plots_goals_assists import (
+    plt_g_a,
+    plt_g_a_all,
+    plt_g_a_lges,
+    plt_g_a_all_lges,
+)
 from constants import LEAGUES
 
 
@@ -26,15 +31,13 @@ def goals_and_assists(df_lge, df_comps, team_name, fotmob_id, lge):
 
     plt_g_a(df_lge_total, "Gls", "Goals", team_name, "#C4961A", fotmob_id, lge, lge)
     plt_g_a(df_lge_total, "Ast", "Assists", team_name, "cadetblue", fotmob_id, lge, lge)
-    plt_g_a_stacked(
-        df_lge_total, "G+A", "Goals + Assists", team_name, fotmob_id, lge, lge
-    )
+    plt_g_a_all(df_lge_total, "G+A", "Goals + Assists", team_name, fotmob_id, lge, lge)
 
     plt_g_a(df_lge_90, "Gls90", "Goals / 90", team_name, "#C4961A", fotmob_id, lge, lge)
     plt_g_a(
         df_lge_90, "Ast90", "Assists / 90", team_name, "cadetblue", fotmob_id, lge, lge
     )
-    plt_g_a_stacked(
+    plt_g_a_all(
         df_lge_90, "G+A90", "Goals + Assists / 90", team_name, fotmob_id, lge, lge
     )
 
@@ -51,7 +54,7 @@ def goals_and_assists(df_lge, df_comps, team_name, fotmob_id, lge):
         lge,
         "comps",
     )
-    plt_g_a_stacked(
+    plt_g_a_all(
         df_comps_total,
         "G+A",
         "Goals + Assists",
@@ -81,7 +84,7 @@ def goals_and_assists(df_lge, df_comps, team_name, fotmob_id, lge):
         lge,
         "comps",
     )
-    plt_g_a_stacked(
+    plt_g_a_all(
         df_comps_90, "G+A90", "Goals + Assists / 90", team_name, fotmob_id, lge, "comps"
     )
 
@@ -89,32 +92,65 @@ def goals_and_assists(df_lge, df_comps, team_name, fotmob_id, lge):
 def goals_and_assists_combined(df_lge, df_comps, lge):
     df_lge_total, df_lge_90 = get_goals_assists(df_lge)
     df_comps_total, df_comps_90 = get_goals_assists(df_comps)
-    fotmob_id = LEAGUES[lge]["fotmob_id"]
+    if lge:
+        fotmob_id = LEAGUES[lge]["fotmob_id"]
+        plt_g_a(df_lge_total, "Gls", "Goals", None, "#C4961A", fotmob_id, lge, lge)
+        plt_g_a(df_lge_total, "Ast", "Assists", None, "cadetblue", fotmob_id, lge, lge)
+        plt_g_a_all(df_lge_total, "G+A", "Goals + Assists", None, fotmob_id, lge, lge)
 
-    plt_g_a(df_lge_total, "Gls", "Goals", None, "#C4961A", fotmob_id, lge, lge)
-    plt_g_a(df_lge_total, "Ast", "Assists", None, "cadetblue", fotmob_id, lge, lge)
-    plt_g_a_stacked(df_lge_total, "G+A", "Goals + Assists", None, fotmob_id, lge, lge)
+        plt_g_a(df_lge_90, "Gls90", "Goals / 90", None, "#C4961A", fotmob_id, lge, lge)
+        plt_g_a(
+            df_lge_90, "Ast90", "Assists / 90", None, "cadetblue", fotmob_id, lge, lge
+        )
+        plt_g_a_all(
+            df_lge_90, "G+A90", "Goals + Assists / 90", None, fotmob_id, lge, lge
+        )
 
-    plt_g_a(df_lge_90, "Gls90", "Goals / 90", None, "#C4961A", fotmob_id, lge, lge)
-    plt_g_a(df_lge_90, "Ast90", "Assists / 90", None, "cadetblue", fotmob_id, lge, lge)
-    plt_g_a_stacked(
-        df_lge_90, "G+A90", "Goals + Assists / 90", None, fotmob_id, lge, lge
-    )
+        plt_g_a(
+            df_comps_total, "Gls", "Goals", None, "#C4961A", fotmob_id, lge, "comps"
+        )
+        plt_g_a(
+            df_comps_total, "Ast", "Assists", None, "cadetblue", fotmob_id, lge, "comps"
+        )
+        plt_g_a_all(
+            df_comps_total, "G+A", "Goals + Assists", None, fotmob_id, lge, "comps"
+        )
+        plt_g_a(
+            df_comps_90, "Gls90", "Goals / 90", None, "#C4961A", fotmob_id, lge, "comps"
+        )
+        plt_g_a(
+            df_comps_90,
+            "Ast90",
+            "Assists / 90",
+            None,
+            "cadetblue",
+            fotmob_id,
+            lge,
+            "comps",
+        )
+        plt_g_a_all(
+            df_comps_90, "G+A90", "Goals + Assists / 90", None, fotmob_id, lge, "comps"
+        )
 
-    plt_g_a(df_comps_total, "Gls", "Goals", None, "#C4961A", fotmob_id, lge, "comps")
-    plt_g_a(
-        df_comps_total, "Ast", "Assists", None, "cadetblue", fotmob_id, lge, "comps"
-    )
-    plt_g_a_stacked(
-        df_comps_total, "G+A", "Goals + Assists", None, fotmob_id, lge, "comps"
-    )
+    else:
+        plt_g_a_lges(df_lge_total, "Gls", "Goals", "#C4961A", "lge")
+        plt_g_a_lges(df_lge_total, "Ast", "Assists", "cadetblue", "lge")
+        plt_g_a_all_lges(df_lge_total, "G+A", "Goals + Assists", "lge")
 
-    plt_g_a(
-        df_comps_90, "Gls90", "Goals / 90", None, "#C4961A", fotmob_id, lge, "comps"
-    )
-    plt_g_a(
-        df_comps_90, "Ast90", "Assists / 90", None, "cadetblue", fotmob_id, lge, "comps"
-    )
-    plt_g_a_stacked(
-        df_comps_90, "G+A90", "Goals + Assists / 90", None, fotmob_id, lge, "comps"
-    )
+        plt_g_a_lges(df_lge_90, "Gls90", "Goals / 90", "#C4961A", "lge")
+        plt_g_a_lges(df_lge_90, "Ast90", "Assists / 90", "cadetblue", "lge")
+        plt_g_a_all_lges(df_lge_90, "G+A90", "Goals + Assists / 90", "lge")
+
+        plt_g_a_lges(df_comps_total, "Gls", "Goals", "#C4961A", "comps")
+        plt_g_a_lges(df_comps_total, "Ast", "Assists", "cadetblue", "comps")
+        plt_g_a_all_lges(df_comps_total, "G+A", "Goals + Assists", "comps")
+
+        plt_g_a_lges(df_comps_90, "Gls90", "Goals / 90", "#C4961A", "comps")
+        plt_g_a_lges(
+            df_comps_90,
+            "Ast90",
+            "Assists / 90",
+            "cadetblue",
+            "comps",
+        )
+        plt_g_a_all_lges(df_comps_90, "G+A90", "Goals + Assists / 90", "comps")

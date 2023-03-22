@@ -479,7 +479,7 @@ def plt_minutes_lges(df, label):
     annotate_axis(ax)
 
     save_figure(
-        f"figures/minutes_{label}.png",
+        f"figures/combined/minutes/all_minutes_{label}.png",
         300,
         False,
         "#EFE9E6",

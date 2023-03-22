@@ -6,7 +6,7 @@ from categories.minutes_played import minutes, minutes_combined
 from categories.nationalities import nations
 from categories.cards import cards_combined
 from utils import get_info, drop_rows, remove_duplicates
-from constants import COLUMNS, NINETY_COLUMNS, TYPES_DICT, LEAGUES
+from constants import COLUMNS, NINETY_COLUMNS, TYPES_DICT, LEAGUES, CATEGORIES
 from teams import TEAMS
 
 pd.options.mode.chained_assignment = None
@@ -120,18 +120,13 @@ def main():
 
     for lge in LEAGUES:
         for competition in [lge, "comps"]:
-            for category in [
-                "gls",
-                "ast",
-                "g+a",
-                "gls90",
-                "ast90",
-                "g+a90",
-                "minutes",
-                "cards",
-            ]:
+            for category in CATEGORIES:
                 if not os.path.isdir(f"figures/{lge}/{category}/{competition}"):
                     os.makedirs(f"figures/{lge}/{category}/{competition}")
+
+    for category in CATEGORIES:
+        if not os.path.isdir(f"figures/combined/{category}"):
+            os.makedirs(f"figures/combined/{category}")
 
     if not os.path.isdir("figures/nationalities"):
         os.makedirs("figures/nationalities")
@@ -162,7 +157,10 @@ def main():
 
     df_lge = pd.read_csv(f"csvs/all_leagues_info.csv")
     df_comps = pd.read_csv(f"csvs/all_comps_info.csv")
+
+    goals_and_assists_combined(df_lge, df_comps, None)
     minutes_combined(df_lge, df_comps, None)
+    cards_combined(df_lge, df_comps, None)
 
     # nations()
 
@@ -171,9 +169,7 @@ if __name__ == "__main__":
     main()
 
 # TODO
-# Duplicates in la liga getting wrong copies
-# print duplicates
-# 3. Get a combined csv and combined data
+# Work out the additions myself
 # 4. Get nationalities csvs
 # 5. Clean up code and refactor
 # 6. Add plot types

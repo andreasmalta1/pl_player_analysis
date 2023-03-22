@@ -10,6 +10,8 @@ LEAGUES = {
     "seriea": {"lge_code": "c11", "lge_name": "Serie A", "fotmob_id": "55"},
 }
 
+CATEGORIES = ["gls", "ast", "g+a", "gls90", "ast90", "g+a90", "minutes", "cards"]
+
 COLUMNS = [
     "Player",
     "Nation",
