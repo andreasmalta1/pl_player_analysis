@@ -18,7 +18,7 @@ def remove_duplicates(df):
     df.drop_duplicates(subset=["Player"], inplace=True)
     df = (
         pd.concat([df, duplicate_rows])
-        .groupby(["Player"], as_index=False)
+        .groupby(["Player", "Nation", "Age"], as_index=False)
         .agg(AGGREGATOR)
     )
 

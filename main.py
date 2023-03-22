@@ -57,12 +57,19 @@ def get_all_data():
 
             df_lge["club_name"] = team_name
             df_comps["club_name"] = team_name
+
             df_lge["club_id"] = fotmob_id
             df_comps["club_id"] = fotmob_id
 
+            df_lge["lge"] = lge
+            df_comps["lge"] = lge
+
+            df_lge = df_lge.replace("gf GUF", "fr FRA")
+            df_comps = df_comps.replace("gf GUF", "fr FRA")
+
             df_lge_mth = get_info(
                 lge_games_url.format(
-                    fbref_id=fbref_id, league_code=lge_code, team_name=team_name
+                    fbref_id=fbref_id, lge_code=lge_code, team_name=team_name
                 )
             )
             df_comps_mth = get_info(
@@ -97,11 +104,19 @@ def get_all_data():
         list_lges_all.append(df_lge_combined)
         list_comps_all.append(df_comps_combined)
 
+    file_path = f"csvs"
+    df_lge_all = pd.concat(list_lges_all, axis=0, ignore_index=True)
+    df_comps_all = pd.concat(list_comps_all, axis=0, ignore_index=True)
+
+    df_lge_all = remove_duplicates(df_lge_all)
+    df_comps_all = remove_duplicates(df_comps_all)
+
+    df_lge_all.to_csv(os.path.join(file_path, "all_leagues_info.csv"))
+    df_comps_all.to_csv(os.path.join(file_path, "all_comps_info.csv"))
+
 
 def main():
     # get_all_data()
-
-    # return
 
     for lge in LEAGUES:
         for competition in [lge, "comps"]:
@@ -121,28 +136,33 @@ def main():
     if not os.path.isdir("figures/nationalities"):
         os.makedirs("figures/nationalities")
 
-    for lge in TEAMS:
-        for team_name in TEAMS[lge]:
-            fotmob_id = TEAMS[lge][team_name]["fotmob_id"]
-            if TEAMS[lge][team_name].get("short_name"):
-                team_name = TEAMS[lge][team_name].get("short_name")
+    # for lge in TEAMS:
+    #     for team_name in TEAMS[lge]:
+    #         print(team_name)
+    #         fotmob_id = TEAMS[lge][team_name]["fotmob_id"]
+    #         if TEAMS[lge][team_name].get("short_name"):
+    #             team_name = TEAMS[lge][team_name].get("short_name")
 
-            df_lge = pd.read_csv(f"csvs/{lge}/{team_name}/league_info.csv")
-            df_comps = pd.read_csv(f"csvs/{lge}/{team_name}/comps_info.csv")
-            df_lge_mth = pd.read_csv(f"csvs/{lge}/{team_name}/league_matches.csv")
-            df_comps_mth = pd.read_csv(f"csvs/{lge}/{team_name}/comps_matches.csv")
+    #         df_lge = pd.read_csv(f"csvs/{lge}/{team_name}/league_info.csv")
+    #         df_comps = pd.read_csv(f"csvs/{lge}/{team_name}/comps_info.csv")
+    #         df_lge_mth = pd.read_csv(f"csvs/{lge}/{team_name}/league_matches.csv")
+    #         df_comps_mth = pd.read_csv(f"csvs/{lge}/{team_name}/comps_matches.csv")
 
-            goals_and_assists(df_lge, df_comps, team_name, fotmob_id, lge)
-            minutes(
-                df_lge, df_comps, df_lge_mth, df_comps_mth, team_name, fotmob_id, lge
-            )
+    #         goals_and_assists(df_lge, df_comps, team_name, fotmob_id, lge)
+    #         minutes(
+    #             df_lge, df_comps, df_lge_mth, df_comps_mth, team_name, fotmob_id, lge
+    #         )
 
-            df_lge = pd.read_csv(f"csvs/{lge}/all_league_info.csv")
-            df_comps = pd.read_csv(f"csvs/{lge}/all_comps_info.csv")
+    #         df_lge = pd.read_csv(f"csvs/{lge}/all_league_info.csv")
+    #         df_comps = pd.read_csv(f"csvs/{lge}/all_comps_info.csv")
 
-        goals_and_assists_combined(df_lge, df_comps, lge)
-        minutes_combined(df_lge, df_comps, lge)
-        cards_combined(df_lge, df_comps, lge)
+    #     goals_and_assists_combined(df_lge, df_comps, lge)
+    #     minutes_combined(df_lge, df_comps, lge)
+    #     cards_combined(df_lge, df_comps, lge)
+
+    df_lge = pd.read_csv(f"csvs/all_leagues_info.csv")
+    df_comps = pd.read_csv(f"csvs/all_comps_info.csv")
+    minutes_combined(df_lge, df_comps, None)
 
     # nations()
 
@@ -151,11 +171,9 @@ if __name__ == "__main__":
     main()
 
 # TODO
-# 1. Make graphs using csvs
-# Working. But duplicates in la liga getting wrong copies
+# Duplicates in la liga getting wrong copies
 # print duplicates
-# 2. Get all teams in teams.py
-# 3. Get a combined csv
+# 3. Get a combined csv and combined data
 # 4. Get nationalities csvs
 # 5. Clean up code and refactor
 # 6. Add plot types

@@ -60,9 +60,7 @@ NINETY_COLUMNS = [
 ]
 
 AGGREGATOR = {
-    "Nation": "first",
     "Pos": "first",
-    "Age": "first",
     "MP": "sum",
     "Starts": "sum",
     "Min": "sum",
@@ -84,6 +82,7 @@ AGGREGATOR = {
     "PrgR": "sum",
     "club_name": "first",
     "club_id": "first",
+    "lge": "first",
 }
 
 TYPES_DICT = {
