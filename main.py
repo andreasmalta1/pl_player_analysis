@@ -82,6 +82,4 @@ if __name__ == "__main__":
 # 5. Clean up code and refactor
 # 6. Add plot types
 
-####
-# For nationalties, save orig save and the tarsnfrom before plotting
-# Rather nation name, see if I can use nation flag when plotting
+# Nationalties not converting properly
