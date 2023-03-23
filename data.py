@@ -234,5 +234,5 @@ def get_data():
         if not os.path.isdir(f"csvs/{lge}"):
             os.makedirs(f"csvs/{lge}")
 
-    # get_teams_data()
+    get_teams_data()
     get_nationalities_data()
