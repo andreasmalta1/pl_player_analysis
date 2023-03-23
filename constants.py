@@ -169,6 +169,7 @@ NATION_COLOURS = {
     "Egypt": "#C8102E",
     "United States": "#002868",
     "Angola": "#C8102E",
+    "Georgia": "#BA0C2F",
 }
 
 
@@ -208,4 +209,5 @@ COUNTRIES = {
     "eg EGY": "Egypt",
     "tr TUR": "Turkey",
     "ao ANG": "Angola",
+    "ge GEO": "Georgia",
 }

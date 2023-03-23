@@ -36,10 +36,6 @@ def plt_nationalities(df_players, df_times, df_goals, lge):
     gs = GridSpec(nrows=3, ncols=1)
     fig.suptitle(f"{comp_description} Nationalities", fontsize=22)
 
-    a = get_nation_colours(df_players["Nation"])
-    print(len(a))
-    print(a)
-
     ax0 = fig.add_subplot(gs[0, 0])
     bars = ax0.bar(
         df_players["Nation"],

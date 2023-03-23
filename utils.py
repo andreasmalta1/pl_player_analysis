@@ -124,10 +124,13 @@ def minutes_battery(ax, minutes, num_games):
 
 
 def get_nation_colours(teams):
-    clr = []
+    teams = teams.values.tolist()
+    colors = []
     for team in teams:
         if team in NATION_COLOURS:
-            clr.append([team])
+            colors.append(NATION_COLOURS[team])
         else:
+            pass
             print(team)
-    return clr
+
+    return colors

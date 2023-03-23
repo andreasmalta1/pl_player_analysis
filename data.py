@@ -3,8 +3,8 @@ import pandas as pd
 import undetected_chromedriver as uc
 from bs4 import BeautifulSoup
 
-from constants import COLUMNS, NINETY_COLUMNS, TYPES_DICT, LEAGUES, COUNTRIES
 from utils import get_info, drop_rows, remove_duplicates
+from constants import COLUMNS, NINETY_COLUMNS, TYPES_DICT, LEAGUES, COUNTRIES
 from teams import TEAMS
 
 LGE_URL = "https://fbref.com/en/squads/{fbref_id}/{team_name}-Stats"
@@ -168,12 +168,7 @@ def get_nationalities_data():
         df = df.dropna()
         df = drop_rows(df, "# Players", "# Players")
         df = df.astype({"# Players": "int", "Min": "int"})
-        # print(df["Nation"])
-        df2 = df
-        df["Nation"] = [x.split(" ")[0].lower() for x in df["Nation"]]
-        print(df["Nation"])
-        df2["Nation"] = df2["Nation"].str.split(" ", 1)
-        print(df2["Nation"])
+        df["Nation"] = [x.split(" ", 1)[1] for x in df["Nation"]]
 
         df_players = df.sort_values(by=["# Players"])
         df_players = df_players.drop(["Min"], axis=1)

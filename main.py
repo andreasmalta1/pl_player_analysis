@@ -30,29 +30,29 @@ def main():
         if not os.path.isdir(f"figures/combined/{category}"):
             os.makedirs(f"figures/combined/{category}")
 
-    # for lge in TEAMS:
-    #     for team_name in TEAMS[lge]:
-    #         print(team_name)
-    #         fotmob_id = TEAMS[lge][team_name]["fotmob_id"]
-    #         if TEAMS[lge][team_name].get("short_name"):
-    #             team_name = TEAMS[lge][team_name].get("short_name")
+    for lge in TEAMS:
+        for team_name in TEAMS[lge]:
+            print(team_name)
+            fotmob_id = TEAMS[lge][team_name]["fotmob_id"]
+            if TEAMS[lge][team_name].get("short_name"):
+                team_name = TEAMS[lge][team_name].get("short_name")
 
-    #         df_lge = pd.read_csv(f"csvs/{lge}/{team_name}/league_info.csv")
-    #         df_comps = pd.read_csv(f"csvs/{lge}/{team_name}/comps_info.csv")
-    #         df_lge_mth = pd.read_csv(f"csvs/{lge}/{team_name}/league_matches.csv")
-    #         df_comps_mth = pd.read_csv(f"csvs/{lge}/{team_name}/comps_matches.csv")
+            df_lge = pd.read_csv(f"csvs/{lge}/{team_name}/league_info.csv")
+            df_comps = pd.read_csv(f"csvs/{lge}/{team_name}/comps_info.csv")
+            df_lge_mth = pd.read_csv(f"csvs/{lge}/{team_name}/league_matches.csv")
+            df_comps_mth = pd.read_csv(f"csvs/{lge}/{team_name}/comps_matches.csv")
 
-    #         # goals_and_assists(df_lge, df_comps, team_name, fotmob_id, lge)
-    #         minutes(
-    #             df_lge, df_comps, df_lge_mth, df_comps_mth, team_name, fotmob_id, lge
-    #         )
+            goals_and_assists(df_lge, df_comps, team_name, fotmob_id, lge)
+            minutes(
+                df_lge, df_comps, df_lge_mth, df_comps_mth, team_name, fotmob_id, lge
+            )
 
-    #         df_lge = pd.read_csv(f"csvs/{lge}/all_league_info.csv")
-    #         df_comps = pd.read_csv(f"csvs/{lge}/all_comps_info.csv")
+            df_lge = pd.read_csv(f"csvs/{lge}/all_league_info.csv")
+            df_comps = pd.read_csv(f"csvs/{lge}/all_comps_info.csv")
 
-    #     goals_and_assists_combined(df_lge, df_comps, lge)
-    #     minutes_combined(df_lge, df_comps, lge)
-    #     cards_combined(df_lge, df_comps, lge)
+        goals_and_assists_combined(df_lge, df_comps, lge)
+        minutes_combined(df_lge, df_comps, lge)
+        cards_combined(df_lge, df_comps, lge)
 
     for lge in LEAGUES:
         df_players = pd.read_csv(f"csvs/{lge}/league_players.csv")
@@ -61,15 +61,15 @@ def main():
 
         plt_nationalities(df_players, df_times, df_goals, lge)
 
-    # df_lge = pd.read_csv(f"csvs/all_leagues_info.csv")
-    # df_comps = pd.read_csv(f"csvs/all_comps_info.csv")
+    df_lge = pd.read_csv(f"csvs/all_leagues_info.csv")
+    df_comps = pd.read_csv(f"csvs/all_comps_info.csv")
     df_players = pd.read_csv(f"csvs/combined_total_players.csv")
     df_times = pd.read_csv(f"csvs/combined_total_times.csv")
     df_goals = pd.read_csv(f"csvs/combined_total_goals.csv")
 
-    # goals_and_assists_combined(df_lge, df_comps, None)
-    # minutes_combined(df_lge, df_comps, None)
-    # cards_combined(df_lge, df_comps, None)
+    goals_and_assists_combined(df_lge, df_comps, None)
+    minutes_combined(df_lge, df_comps, None)
+    cards_combined(df_lge, df_comps, None)  #
     plt_nationalities_combined(df_players, df_times, df_goals)
 
 
@@ -77,9 +77,5 @@ if __name__ == "__main__":
     main()
 
 # TODO
-
-# 4. Get nationalities csvs
 # 5. Clean up code and refactor
 # 6. Add plot types
-
-# Nationalties not converting properly
