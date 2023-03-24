@@ -4,6 +4,7 @@ import pandas as pd
 from categories.goals_assists import goals_and_assists, goals_and_assists_combined
 from categories.minutes_played import minutes, minutes_combined
 from categories.cards import cards_combined
+from categories.progression import progression, progression_combined
 from plots.plots_nationalities import plt_nationalities, plt_nationalities_combined
 from data import get_data
 
@@ -14,7 +15,7 @@ pd.options.mode.chained_assignment = None
 
 
 def main():
-    get_data()
+    # get_data()
 
     for lge in LEAGUES:
         for competition in [lge, "comps"]:
@@ -46,13 +47,15 @@ def main():
             minutes(
                 df_lge, df_comps, df_lge_mth, df_comps_mth, team_name, fotmob_id, lge
             )
+            progression(df_lge, df_comps, team_name, fotmob_id, lge)
 
-            df_lge = pd.read_csv(f"csvs/{lge}/all_league_info.csv")
-            df_comps = pd.read_csv(f"csvs/{lge}/all_comps_info.csv")
+        df_lge = pd.read_csv(f"csvs/{lge}/all_league_info.csv")
+        df_comps = pd.read_csv(f"csvs/{lge}/all_comps_info.csv")
 
         goals_and_assists_combined(df_lge, df_comps, lge)
         minutes_combined(df_lge, df_comps, lge)
         cards_combined(df_lge, df_comps, lge)
+        progression_combined(df_lge, df_comps, lge)
 
     for lge in LEAGUES:
         df_players = pd.read_csv(f"csvs/{lge}/league_players.csv")
@@ -69,7 +72,8 @@ def main():
 
     goals_and_assists_combined(df_lge, df_comps, None)
     minutes_combined(df_lge, df_comps, None)
-    cards_combined(df_lge, df_comps, None)  #
+    cards_combined(df_lge, df_comps, None)
+    progression_combined(df_lge, df_comps, None)
     plt_nationalities_combined(df_players, df_times, df_goals)
 
 
@@ -77,5 +81,9 @@ if __name__ == "__main__":
     main()
 
 # TODO
-# 5. Clean up code and refactor
-# 6. Add plot types
+# Logo on text (Man Utd)
+# Fix annotaion overlap for progression
+# Change annotation between teams and leagues
+# Fix too many players in combined data
+
+# Reduce # of code lines especially when plotting -- too many functions that do the same thing

@@ -22,6 +22,7 @@ CATEGORIES = [
     "minutes",
     "cards",
     "nationalities",
+    "progression",
 ]
 
 COLUMNS = [
