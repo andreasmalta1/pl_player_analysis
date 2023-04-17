@@ -26,8 +26,6 @@ def get_final_df(df):
 
 
 def leagues_point_race():
-    pass
-
     for lge in LEAGUES:
         if not LEAGUES[lge].get("start_year"):
             continue

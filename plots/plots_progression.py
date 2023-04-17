@@ -76,14 +76,7 @@ def plt_progression_combined(df, lge, comp):
 
     for index, row in df.iterrows():
         if row["PrgP"] > passes_limit or row["PrgC"] > carries_limit:
-            # ax.annotate(row["Player"], (row["PrgP"] + 0.2, row["PrgC"] + 1))
-            texts.append(plt.text(row["PrgP"], row["PrgC"], row["Player"]))
-
-    adjust_text(
-        texts,
-        only_move={"points": "y", "texts": "y"},
-        arrowprops=dict(arrowstyle="->", color="r", lw=0.5),
-    )
+            ax.annotate(row["Player"], (row["PrgP"] + 0.2, row["PrgC"] + 1))
 
     logo_ax = fig.add_axes([0.88, 0.77, 0.1, 0.1])
     ax_logo(lge_id, logo_ax, True)
