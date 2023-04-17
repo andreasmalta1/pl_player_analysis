@@ -42,12 +42,12 @@ def get_info(url):
     return df
 
 
-def ax_logo(logo_id, ax, league=False):
+def ax_logo(logo_id, ax, league=False, alpha=1):
     url = "https://images.fotmob.com/image_resources/logo/teamlogo/"
     if league:
         url = "https://images.fotmob.com/image_resources/logo/leaguelogo/"
     icon = Image.open(urllib.request.urlopen(f"{url}{logo_id}.png"))
-    ax.imshow(icon)
+    ax.imshow(icon, alpha=alpha)
     ax.axis("off")
     return ax
 

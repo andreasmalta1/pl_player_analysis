@@ -33,7 +33,7 @@ def plt_progression(df, team_name, fotmob_id, lge, comp):
             ax.annotate(row["Player"], (row["PrgP"] + 0.2, row["PrgC"] + 1))
 
     logo_ax = fig.add_axes([0.88, 0.77, 0.1, 0.1])
-    ax_logo(fotmob_id, logo_ax)
+    ax_logo(fotmob_id, logo_ax, alpha=0.5)
 
     annotate_axis(ax)
 
@@ -71,8 +71,6 @@ def plt_progression_combined(df, lge, comp):
     ax.set_ylabel("Progressive Carries", fontweight="bold")
     ax.set_xlabel("Progressive Passes", fontweight="bold")
     ax.scatter(df["PrgP"], df["PrgC"], color="#FF7F0E")
-
-    texts = []
 
     for index, row in df.iterrows():
         if row["PrgP"] > passes_limit or row["PrgC"] > carries_limit:
