@@ -1,10 +1,8 @@
 import bar_chart_race as bcr
-import urllib.request
 import requests
-from PIL import Image
-from moviepy.editor import *
-from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
-import subprocess
+import os
+from moviepy.editor import VideoFileClip, ImageClip, TextClip, CompositeVideoClip
+from moviepy.editor import vfx
 
 from constants import LEAGUES
 
@@ -17,8 +15,8 @@ def get_video(df, competition_name, lge, year):
         title=f"{competition_name} Clubs Points Since {year}",
         filename=f"videos/{lge}_clubs.mp4",
         filter_column_colors=True,
-        period_length=1000,
-        steps_per_period=10,
+        period_length=700,
+        steps_per_period=30,
         dpi=300,
         cmap="pastel1",
     )
@@ -27,7 +25,7 @@ def get_video(df, competition_name, lge, year):
 def freeze_video(lge):
     video = (
         VideoFileClip(f"videos/{lge}_clubs.mp4")
-        .fx(vfx.freeze, t="end", freeze_duration=3)
+        .fx(vfx.freeze, t="end", freeze_duration=1.5)
         .fx(vfx.multiply_speed, 0.5)
     )
 
@@ -54,19 +52,12 @@ def freeze_video(lge):
     )
 
     footer_two = (
-        TextClip(
-            "Data Viz by Andreas Calleja @andreascalleja", font_size=25, color="black"
-        )
+        TextClip("Data Viz by @plvizstats || u/plvizstats", font_size=25, color="black")
         .with_position((330, video.h - 40))
         .with_duration(video.duration)
         .with_start(0)
     )
 
     final = CompositeVideoClip([video, logo or None, footer_one, footer_two])
-    final.write_videofile(f"videos/{lge}_clubs_draft.mp4", codec="libx264")
-    ffmpeg_extract_subclip(
-        f"videos/{lge}_clubs_draft.mp4",
-        0,
-        (final.duration - 3),
-        f"videos/final/{lge}_clubs.mp4",
-    )
+    final.write_videofile(f"videos/{lge}_clubs_final.mp4", codec="libx264")
+    os.remove("logo.png")
