@@ -29,6 +29,20 @@ def freeze_video(lge):
         .fx(vfx.multiply_speed, 0.5)
     )
 
+    footer_one = (
+        TextClip("Stats from fbref.com", font_size=25, color="black")
+        .with_position((334, video.h - 75))
+        .with_duration(video.duration)
+        .with_start(0)
+    )
+
+    footer_two = (
+        TextClip("Data Viz by @plvizstats || u/plvizstats", font_size=25, color="black")
+        .with_position((330, video.h - 40))
+        .with_duration(video.duration)
+        .with_start(0)
+    )
+
     if lge != "combined":
         league_id = LEAGUES[lge].get("fotmob_id")
         url = "https://images.fotmob.com/image_resources/logo/leaguelogo/"
@@ -44,20 +58,10 @@ def freeze_video(lge):
             .with_position(("right", "top"))
         )
 
-    footer_one = (
-        TextClip("Stats from fbref.com", font_size=25, color="black")
-        .with_position((334, video.h - 75))
-        .with_duration(video.duration)
-        .with_start(0)
-    )
+        final = CompositeVideoClip([video, logo, footer_one, footer_two])
+    else:
+        final = CompositeVideoClip([video, footer_one, footer_two])
 
-    footer_two = (
-        TextClip("Data Viz by @plvizstats || u/plvizstats", font_size=25, color="black")
-        .with_position((330, video.h - 40))
-        .with_duration(video.duration)
-        .with_start(0)
-    )
-
-    final = CompositeVideoClip([video, logo or None, footer_one, footer_two])
     final.write_videofile(f"videos/{lge}_clubs_final.mp4", codec="libx264")
-    os.remove("logo.png")
+    if os.path.exists("logo.png"):
+        os.remove("logo.png")
