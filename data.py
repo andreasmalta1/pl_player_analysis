@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import undetected_chromedriver as uc
 from bs4 import BeautifulSoup
+import time
 
 from utils import get_info, drop_rows, remove_duplicates
 from constants import COLUMNS, NINETY_COLUMNS, TYPES_DICT, LEAGUES, COUNTRIES
@@ -56,6 +57,7 @@ def get_teams_data():
 
         for team_name in TEAMS[lge]:
             print(team_name)
+            time.sleep(45)
             fbref_id = TEAMS[lge][team_name]["fbref_id"]
             fotmob_id = TEAMS[lge][team_name]["fotmob_id"]
             if TEAMS[lge][team_name].get("short_name"):

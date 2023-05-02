@@ -6,7 +6,9 @@ from categories.minutes_played import minutes, minutes_combined
 from categories.cards import cards_combined
 from categories.progression import progression, progression_combined
 from categories.leagues_race import leagues_point_race
+from categories.goalkeepers import goalkeepers
 from plots.plots_nationalities import plt_nationalities, plt_nationalities_combined
+
 from data import get_data
 
 from constants import LEAGUES, CATEGORIES
@@ -16,7 +18,7 @@ pd.options.mode.chained_assignment = None
 
 
 def main():
-    # get_data()
+    get_data()
 
     for lge in LEAGUES:
         for competition in [lge, "comps"]:
@@ -78,6 +80,8 @@ def main():
     plt_nationalities_combined(df_players, df_times, df_goals)
 
     leagues_point_race()
+
+    goalkeepers()
 
 
 if __name__ == "__main__":
