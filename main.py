@@ -88,6 +88,8 @@ if __name__ == "__main__":
     main()
 
 # TODO
+# Combined csvs done standalone
+# Retrieve goalkeepers csvs
 # Add per 90 progression
 # Fix annotaion overlap for progression
 # Change annotation between teams and leagues
