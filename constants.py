@@ -93,6 +93,8 @@ NINETY_COLUMNS = [
     "xG+xAG90",
     "npxG90",
     "npxG+xAG90",
+    "PrgC90",
+    "PrgP90",
 ]
 
 AGGREGATOR = {

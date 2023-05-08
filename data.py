@@ -49,10 +49,7 @@ def get_goals(url):
 
 
 def get_teams_data():
-    list_lges_all, list_comps_all = [], []
-
     for lge in TEAMS:
-        list_lge_combined, list_comps_combined = [], []
         lge_code = LEAGUES[lge]["lge_code"]
 
         for team_name in TEAMS[lge]:
@@ -83,6 +80,36 @@ def get_teams_data():
             df_lge = df_lge.astype(TYPES_DICT)
             df_comps = df_comps.astype(TYPES_DICT)
 
+            for i in df_lge.index:
+                df_lge.at[i, "G+A"] = int(df_lge.at[i, "Gls"]) + int(
+                    df_lge.at[i, "Ast"]
+                )
+
+            for i in df_comps.index:
+                df_comps.at[i, "G+A"] = int(df_comps.at[i, "Gls"]) + int(
+                    df_comps.at[i, "Ast"]
+                )
+
+            for i in df_lge.index:
+                df_lge.at[i, "PrgC90"] = round(
+                    float(df_lge.at[i, "PrgC"]) / float(df_lge.at[i, "90s"]), 2
+                )
+
+            for i in df_comps.index:
+                df_comps.at[i, "PrgC90"] = round(
+                    float(df_comps.at[i, "PrgC"]) / float(df_comps.at[i, "90s"]), 2
+                )
+
+            for i in df_lge.index:
+                df_lge.at[i, "PrgP90"] = round(
+                    float(df_lge.at[i, "PrgP"]) / float(df_lge.at[i, "90s"]), 2
+                )
+
+            for i in df_comps.index:
+                df_comps.at[i, "PrgP90"] = round(
+                    float(df_comps.at[i, "PrgP"]) / float(df_comps.at[i, "90s"]), 2
+                )
+
             df_lge["club_name"] = team_name
             df_comps["club_name"] = team_name
 
@@ -94,16 +121,6 @@ def get_teams_data():
 
             df_lge = df_lge.replace("gf GUF", "fr FRA")
             df_comps = df_comps.replace("gf GUF", "fr FRA")
-
-            for i in df_lge.index:
-                df_lge.at[i, "G+A"] = int(df_lge.at[i, "Gls"]) + int(
-                    df_lge.at[i, "Ast"]
-                )
-
-            for i in df_comps.index:
-                df_comps.at[i, "G+A"] = int(df_comps.at[i, "Gls"]) + int(
-                    df_comps.at[i, "Ast"]
-                )
 
             df_lge_mth = get_info(
                 LGE_GAMES_URL.format(
@@ -122,35 +139,6 @@ def get_teams_data():
             df_comps.to_csv(os.path.join(file_path, "comps_info.csv"))
             df_lge_mth.to_csv(os.path.join(file_path, "league_matches.csv"))
             df_comps_mth.to_csv(os.path.join(file_path, "comps_matches.csv"))
-
-            df_lge.drop(NINETY_COLUMNS, axis=1)
-            df_comps.drop(NINETY_COLUMNS, axis=1)
-            list_lge_combined.append(df_lge)
-            list_comps_combined.append(df_comps)
-
-        file_path = f"csvs/{lge}"
-
-        df_lge_combined = pd.concat(list_lge_combined, axis=0, ignore_index=True)
-        df_comps_combined = pd.concat(list_comps_combined, axis=0, ignore_index=True)
-
-        df_lge_combined = remove_duplicates(df_lge_combined)
-        df_comps_combined = remove_duplicates(df_comps_combined)
-
-        df_lge_combined.to_csv(os.path.join(file_path, "all_league_info.csv"))
-        df_comps_combined.to_csv(os.path.join(file_path, "all_comps_info.csv"))
-
-        list_lges_all.append(df_lge_combined)
-        list_comps_all.append(df_comps_combined)
-
-    file_path = f"csvs"
-    df_lge_all = pd.concat(list_lges_all, axis=0, ignore_index=True)
-    df_comps_all = pd.concat(list_comps_all, axis=0, ignore_index=True)
-
-    df_lge_all = remove_duplicates(df_lge_all)
-    df_comps_all = remove_duplicates(df_comps_all)
-
-    df_lge_all.to_csv(os.path.join(file_path, "all_leagues_info.csv"))
-    df_comps_all.to_csv(os.path.join(file_path, "all_comps_info.csv"))
 
 
 def get_nationalities_data():
@@ -231,6 +219,50 @@ def get_nationalities_data():
     df_total_goals.to_csv(os.path.join(file_path, "combined_total_goals.csv"))
 
 
+def combine_data():
+    list_lges_all, list_comps_all = [], []
+
+    for lge in TEAMS:
+        list_lge_combined, list_comps_combined = [], []
+
+        for team_name in TEAMS[lge]:
+            if TEAMS[lge][team_name].get("short_name"):
+                team_name = TEAMS[lge][team_name].get("short_name")
+
+            file_path = f"csvs/{lge}/{team_name.lower()}"
+            df_lge = pd.read_csv(os.path.join(file_path, "league_info.csv"))
+            df_comps = pd.read_csv(os.path.join(file_path, "comps_info.csv"))
+
+            df_lge.drop(NINETY_COLUMNS, axis=1)
+            df_comps.drop(NINETY_COLUMNS, axis=1)
+            list_lge_combined.append(df_lge)
+            list_comps_combined.append(df_comps)
+
+        file_path = f"csvs/{lge}"
+
+        df_lge_combined = pd.concat(list_lge_combined, axis=0, ignore_index=True)
+        df_comps_combined = pd.concat(list_comps_combined, axis=0, ignore_index=True)
+
+        df_lge_combined = remove_duplicates(df_lge_combined)
+        df_comps_combined = remove_duplicates(df_comps_combined)
+
+        df_lge_combined.to_csv(os.path.join(file_path, "all_league_info.csv"))
+        df_comps_combined.to_csv(os.path.join(file_path, "all_comps_info.csv"))
+
+        list_lges_all.append(df_lge_combined)
+        list_comps_all.append(df_comps_combined)
+
+    file_path = f"csvs"
+    df_lge_all = pd.concat(list_lges_all, axis=0, ignore_index=True)
+    df_comps_all = pd.concat(list_comps_all, axis=0, ignore_index=True)
+
+    df_lge_all = remove_duplicates(df_lge_all)
+    df_comps_all = remove_duplicates(df_comps_all)
+
+    df_lge_all.to_csv(os.path.join(file_path, "all_leagues_info.csv"))
+    df_comps_all.to_csv(os.path.join(file_path, "all_comps_info.csv"))
+
+
 def get_data():
     for lge in LEAGUES:
         if not os.path.isdir(f"csvs/{lge}"):
@@ -238,3 +270,4 @@ def get_data():
 
     get_teams_data()
     get_nationalities_data()
+    combine_data()
