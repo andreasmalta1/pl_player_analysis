@@ -18,7 +18,7 @@ pd.options.mode.chained_assignment = None
 
 
 def main():
-    get_data()
+    # get_data()
 
     for lge in LEAGUES:
         for competition in [lge, "comps"]:
