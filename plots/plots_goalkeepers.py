@@ -5,14 +5,12 @@ from utils import annotate_axis, ax_logo, save_figure, remove_plot_border
 from constants import LEAGUES
 
 
-def plt_gk_stats(df, col, label, fotmob_id):
+def plt_gk_stats(df, col, label, lge, fotmob_id):
     league = True
-    file_name = f"gks_{col.lower()}"
-    title = f"{label} Premier League 22/23"
+    file_name = f"{lge}_{col.lower()}".replace("/", "_")
+    title = f"{label} {lge} 22/23"
 
     df = df.sort_values(col)
-
-    print(df)
 
     fig = plt.figure(figsize=(8, 10), dpi=300, facecolor="#EFE9E6")
     ax = plt.subplot()
@@ -45,14 +43,13 @@ def plt_gk_stats(df, col, label, fotmob_id):
             fontweight="bold",
         )
 
-    # logo_ax = fig.add_axes([0.80, 0.1, 0.15, 0.15])
     logo_ax = fig.add_axes([0.65, 0.2, 0.2, 0.2])
     ax_logo(fotmob_id, logo_ax, league)
 
     annotate_axis(ax)
 
     save_figure(
-        f"figures/epl/gks/{file_name}.png",
+        f"figures/gks/{file_name}.png",
         300,
         False,
         "#EFE9E6",

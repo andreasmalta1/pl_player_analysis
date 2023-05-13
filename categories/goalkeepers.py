@@ -1,28 +1,34 @@
 import pandas as pd
+
 from plots.plots_goalkeepers import plt_gk_stats
+from constants import LEAGUES
 
 
 def goalkeepers():
-    df = pd.read_csv(f"csvs/epl/goalkeepers/epl_gks.csv")
-    df_advanced = pd.read_csv(f"csvs/epl/goalkeepers/epl_gks_advanced.csv")
+    for lge in LEAGUES:
+        lge_name = LEAGUES[lge]["lge_name"].replace(" ", "-")
+        fotmob_id = LEAGUES[lge]["fotmob_id"]
 
-    mins = df["Min"]
-    mps = df["MP"]
+        df = pd.read_csv(f"csvs/gks/{lge_name}_gk".lower())
+        df_adv = pd.read_csv(f"csvs/gks/{lge_name}_adv_gk".lower())
 
-    df_advanced = df_advanced.join(mins)
-    df_advanced = df_advanced.join(mps)
+        mins = df["Min"]
+        mps = df["MP"]
 
-    df = df[df["Min"] >= 900].reset_index(drop=True)
-    df_advanced = df_advanced[df_advanced["Min"] >= 900].reset_index(drop=True)
+        df_adv = df_adv.join(mins)
+        df_adv = df_adv.join(mps)
 
-    for i in df.index:
-        df.at[i, "Player"] = f"{df.at[i, 'Player']} ({df.at[i, 'MP']})"
-        df_advanced.at[
-            i, "Player"
-        ] = f"{df_advanced.at[i, 'Player']} ({df_advanced.at[i, 'MP']})"
+        df = df[df["Min"] >= 900].reset_index(drop=True)
+        df_adv = df_adv[df_adv["Min"] >= 900].reset_index(drop=True)
 
-    df_saves_pct = df[["Player", "Save%"]]
-    df_psxg = df_advanced[["Player", "PSxG-GA"]]
+        for i in df.index:
+            df.at[i, "Player"] = f"{df.at[i, 'Player']} ({df.at[i, 'MP']})"
+            df_adv.at[i, "Player"] = f"{df_adv.at[i, 'Player']} ({df_adv.at[i, 'MP']})"
 
-    plt_gk_stats(df_saves_pct, "Save%", "Saves %", 47)
-    plt_gk_stats(df_psxg, "PSxG-GA", "Posts Shots xG - Goals Allowed", 47)
+        df_saves_pct = df[["Player", "Save%"]]
+        df_psxg = df_adv[["Player", "PSxG+/-"]]
+
+        plt_gk_stats(df_saves_pct, "Save%", "Saves %", lge, fotmob_id)
+        plt_gk_stats(
+            df_psxg, "PSxG+/-", "Posts Shots xG - Goals Allowed", lge, fotmob_id
+        )

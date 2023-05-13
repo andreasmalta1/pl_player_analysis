@@ -1,7 +1,8 @@
 import os
+import requests
 import pandas as pd
 import undetected_chromedriver as uc
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Comment
 import time
 
 from utils import get_info, drop_rows, remove_duplicates
@@ -16,6 +17,8 @@ NATIONALITIES_URL = (
     "https://fbref.com/en/comps/{lge_code}/nations/{lge_name}-Nationalities"
 )
 GOALS_URL = "https://fbref.com/en/comps/{lge_code}/shooting/{lge_name}-Stats"
+GK_URL = "https://fbref.com/en/comps/{lge_code}/keepers/{lge_name}-Stats"
+GK_ADV_URL = "https://fbref.com/en/comps/{lge_code}/keepersadv/{lge_name}-Stats"
 
 
 def get_goals(url):
@@ -263,6 +266,32 @@ def combine_data():
     df_comps_all.to_csv(os.path.join(file_path, "all_comps_info.csv"))
 
 
+def get_keeper_data():
+    for lge in LEAGUES:
+        lge_name = LEAGUES[lge]["lge_name"].replace(" ", "-")
+        lge_code = LEAGUES[lge]["lge_code"][1:]
+
+        for url in [GK_URL, GK_ADV_URL]:
+            html = requests.get(url.format(lge_code=lge_code, lge_name=lge_name))
+            soup = BeautifulSoup(html.text, "html.parser")
+            comments = soup.find_all(string=lambda text: isinstance(text, Comment))
+            df = None
+            for each in comments:
+                if "table" in str(each):
+                    try:
+                        df = pd.read_html(str(each), header=1)[0]
+                        df = df[df["Rk"].ne("Rk")].reset_index(drop=True)
+                    except ValueError:
+                        continue
+
+            if url == GK_ADV_URL:
+                file_path = f"csvs/gks/{lge_name}_adv_gk".lower()
+            else:
+                file_path = f"csvs/gks/{lge_name}_gk".lower()
+
+            df.to_csv(file_path)
+
+
 def get_data():
     for lge in LEAGUES:
         if not os.path.isdir(f"csvs/{lge}"):
@@ -271,3 +300,4 @@ def get_data():
     get_teams_data()
     get_nationalities_data()
     combine_data()
+    get_keeper_data()

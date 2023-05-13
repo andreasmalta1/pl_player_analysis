@@ -18,7 +18,7 @@ pd.options.mode.chained_assignment = None
 
 
 def main():
-    # get_data()
+    get_data()
 
     for lge in LEAGUES:
         for competition in [lge, "comps"]:
@@ -78,17 +78,15 @@ def main():
     cards_combined(df_lge, df_comps, None)
     progression_combined(df_lge, df_comps, None)
     plt_nationalities_combined(df_players, df_times, df_goals)
+    goalkeepers()
 
     leagues_point_race()
-
-    goalkeepers()
 
 
 if __name__ == "__main__":
     main()
 
 # TODO
-# Retrieve goalkeepers csvs
 # Fix annotaion overlap for progression
 # Change annotation between teams and leagues
 # Fix too many players in combined data
