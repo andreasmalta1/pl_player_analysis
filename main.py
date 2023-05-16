@@ -87,6 +87,11 @@ if __name__ == "__main__":
     main()
 
 # TODO
+# Fix g + a not equal values
+# Make a g+a like the minutes one
+# More goalkeeper values
+# Fix goalkeeper plots
+# Progression recieved
 # Fix annotaion overlap for progression
 # Change annotation between teams and leagues
 # Fix too many players in combined data
