@@ -32,7 +32,7 @@ TEAMS = {
             "fotmob_id": 8602,
             "short_name": "Wolves",
         },
-    }
+    },
     "laliga": {
         "Alaves": {"fbref_id": "8d6fd021", "fotmob_id": 9866},
         "Almeria": {"fbref_id": "78ecf4bb", "fotmob_id": 9865},
