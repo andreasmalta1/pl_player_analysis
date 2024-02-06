@@ -18,10 +18,10 @@ def plt_g_a(df, column_name, label, team_name, plot_color, fotmob_id, lge, comp)
 
     if team_name:
         file_name = f"{team_name.replace('-', '_').lower()}_{column_name.lower()}"
-        title = f"{team_name.replace('-', ' ')} {label} {descriptor} {comp_description} 22/23"
+        title = f"{team_name.replace('-', ' ')} {label} {descriptor} {comp_description} 23/24"
     else:
         file_name = f"all_{column_name.lower()}"
-        title = f"{label} {descriptor} {comp_description} 22/23"
+        title = f"{label} {descriptor} {comp_description} 23/24"
 
     df = df[["Player", column_name]]
     df = df[~df[column_name].isna()]
@@ -87,10 +87,10 @@ def plt_g_a_all(df, column_name, label, team_name, fotmob_id, lge, comp):
 
     if team_name:
         file_name = f"{team_name.replace('-', '_').lower()}_{column_name.lower()}"
-        title = f"{team_name.replace('-', ' ')} {label} {descriptor} {comp_description} 22/23"
+        title = f"{team_name.replace('-', ' ')} {label} {descriptor} {comp_description} 23/24"
     else:
         file_name = f"all_{column_name.lower()}"
-        title = f"{label} {descriptor} {comp_description} 22/23"
+        title = f"{label} {descriptor} {comp_description} 23/24"
 
     df = df[~df[column_name].isna()]
     if "90" not in column_name:
@@ -206,7 +206,7 @@ def plt_g_a_lges(df, column_name, label, plot_color, comp):
         descriptor = "Provided"
 
     file_name = f"all_{column_name.lower()}_{comp}"
-    title = f"Top 5 Leagues {label} {descriptor} {comp_description} 22/23"
+    title = f"Top 5 Leagues {label} {descriptor} {comp_description} 23/24"
 
     df = df[["Player", column_name]]
     df = df[~df[column_name].isna()]
@@ -264,7 +264,7 @@ def plt_g_a_all_lges(df, column_name, label, comp):
     descriptor = "Leaderboard"
 
     file_name = f"all_{column_name.lower()}_{comp}"
-    title = f"Top 5 Leagues {label} {descriptor} {comp_description} 22/23"
+    title = f"Top 5 Leagues {label} {descriptor} {comp_description} 23/24"
 
     df = df[~df[column_name].isna()]
     if "90" not in column_name:

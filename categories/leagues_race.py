@@ -6,7 +6,7 @@ from plots.plots_leagues_race import get_video, freeze_video
 
 def get_seasons_df(lge, year_start):
     df_all_seasons = pd.DataFrame(columns=["Season", "Squad", "Pts"])
-    for year in range(year_start, 2022):
+    for year in range(year_start, 2023):
         df = pd.read_csv(f"csvs/{lge}/league_standings/{lge}_{year}-{year+1}.csv")
         df = df[["Squad", "Pts"]]
         df["Season"] = f"{year}/{year+1}"

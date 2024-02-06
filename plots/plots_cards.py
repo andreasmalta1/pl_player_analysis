@@ -9,7 +9,7 @@ def plt_cards(df, column_name, label, plot_color, fotmob_id, lge, comp):
     if comp != "comps":
         comp_description = LEAGUES.get(comp).get("lge_name")
 
-    title = f"{label} Cards {comp_description} 22/23"
+    title = f"{label} Cards {comp_description} 23/24"
 
     df = df[df[column_name] != 0]
     df = df.sort_values(column_name)
@@ -60,7 +60,7 @@ def plt_cards_all(df, fotmob_id, lge, comp):
         comp_description = LEAGUES.get(comp).get("lge_name")
 
     label = "Disciplinary Record"
-    title = f"{label} {comp_description} 22/23"
+    title = f"{label} {comp_description} 23/24"
 
     df = df[df["Sum"] != 0]
     df = df.sort_values(["Sum", "CrdR"])
@@ -148,7 +148,7 @@ def plt_cards_lges(df, column_name, label, plot_color, comp):
     else:
         comp_description = "League Games"
 
-    title = f"Top 5 Leagues {label} Cards {comp_description} 22/23"
+    title = f"Top 5 Leagues {label} Cards {comp_description} 23/24"
 
     df = df[df[column_name] != 0]
     df = df.sort_values(column_name)
@@ -197,7 +197,7 @@ def plt_cards_all_lges(df, comp):
         comp_description = "League Games"
 
     label = "Disciplinary Record"
-    title = f"Top 5 Leagues {label} Cards {comp_description} 22/23"
+    title = f"Top 5 Leagues {label} Cards {comp_description} 23/24"
 
     df = df[df["Sum"] != 0]
     df = df.sort_values(["Sum", "CrdR"])

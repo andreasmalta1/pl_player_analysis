@@ -19,7 +19,7 @@ def plt_progression(df, team_name, fotmob_id, lge, comp):
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     ax.set_title(
-        f"{team_name.replace('-', ' ')} Progression Passes V Carries {comp_description} 22/23",
+        f"{team_name.replace('-', ' ')} Progression Passes V Carries {comp_description} 23/24",
         fontweight="bold",
         fontsize=12,
     )
@@ -62,7 +62,7 @@ def plt_progression_90s(df, team_name, fotmob_id, lge, comp):
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     ax.set_title(
-        f"{team_name.replace('-', ' ')} Progression Passes V Carries Per 90 {comp_description} 22/23",
+        f"{team_name.replace('-', ' ')} Progression Passes V Carries Per 90 {comp_description} 23/24",
         fontweight="bold",
         fontsize=12,
     )
@@ -106,7 +106,7 @@ def plt_progression_combined(df, lge, comp):
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     ax.set_title(
-        f"Progression Passes V Carries {comp_description} 22/23",
+        f"Progression Passes V Carries {comp_description} 23/24",
         fontweight="bold",
         fontsize=12,
     )
@@ -153,7 +153,7 @@ def plt_progression_combined_90s(df, lge, comp):
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     ax.set_title(
-        f"Progression Passes V Carries {comp_description} 22/23",
+        f"Progression Passes V Carries {comp_description} 23/24",
         fontweight="bold",
         fontsize=12,
     )
@@ -200,7 +200,7 @@ def plt_progression_combined_all(df, comp):
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     ax.set_title(
-        f"Progression Passes V Carries {comp_description} 22/23",
+        f"Progression Passes V Carries {comp_description} 23/24",
         fontweight="bold",
         fontsize=12,
     )
@@ -241,7 +241,7 @@ def plt_progression_combined_all_90s(df, comp):
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     ax.set_title(
-        f"Progression Passes V Carries {comp_description} 22/23",
+        f"Progression Passes V Carries {comp_description} 23/24",
         fontweight="bold",
         fontsize=12,
     )

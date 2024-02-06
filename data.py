@@ -10,9 +10,9 @@ from constants import COLUMNS, NINETY_COLUMNS, TYPES_DICT, LEAGUES, COUNTRIES
 from teams import TEAMS
 
 LGE_URL = "https://fbref.com/en/squads/{fbref_id}/{team_name}-Stats"
-COMPS_URL = "https://fbref.com/en/squads/{fbref_id}/2022-2023/all_comps/{team_name}-Stats-All-Competitions"
-LGE_GAMES_URL = "https://fbref.com/en/squads/{fbref_id}/2022-2023/matchlogs/{lge_code}/misc/{team_name}-Match-Logs"
-COMPS_GAMES_URL = "https://fbref.com/en/squads/{fbref_id}/2022-2023/matchlogs/all_comps/misc/{team_name}-Match-Logs-All-Competitions"
+COMPS_URL = "https://fbref.com/en/squads/{fbref_id}/2023-2024/all_comps/{team_name}-Stats-All-Competitions"
+LGE_GAMES_URL = "https://fbref.com/en/squads/{fbref_id}/2023-2024/matchlogs/{lge_code}/misc/{team_name}-Match-Logs"
+COMPS_GAMES_URL = "https://fbref.com/en/squads/{fbref_id}/2023-2024/matchlogs/all_comps/misc/{team_name}-Match-Logs-All-Competitions"
 NATIONALITIES_URL = (
     "https://fbref.com/en/comps/{lge_code}/nations/{lge_name}-Nationalities"
 )

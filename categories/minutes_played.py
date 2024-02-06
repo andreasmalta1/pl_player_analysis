@@ -2,13 +2,9 @@ from plots.plots_minutes import plt_minutes, plt_minutes_all, plt_minutes_lges
 
 
 def get_num_matches(df):
-    df = df["Result"].tail(1)
-    total_games = df.iloc[0].split("-")
-    num_games = 0
-    for value in total_games:
-        num_games += int(value)
+    return len(df.index) - 1
 
-    return num_games
+    
 
 
 def get_minutes(df):
