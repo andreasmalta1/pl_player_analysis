@@ -3,3 +3,6 @@ __pycache__
 figures
 csvs
 videos
+.env
+client/
+main_app/
