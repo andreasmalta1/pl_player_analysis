@@ -2,6 +2,7 @@ import os
 import requests
 import pandas as pd
 import undetected_chromedriver as uc
+from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup, Comment
 import time
 
@@ -10,9 +11,9 @@ from constants import COLUMNS, NINETY_COLUMNS, TYPES_DICT, LEAGUES, COUNTRIES
 from teams import TEAMS
 
 LGE_URL = "https://fbref.com/en/squads/{fbref_id}/{team_name}-Stats"
-COMPS_URL = "https://fbref.com/en/squads/{fbref_id}/2023-2024/all_comps/{team_name}-Stats-All-Competitions"
-LGE_GAMES_URL = "https://fbref.com/en/squads/{fbref_id}/2023-2024/matchlogs/{lge_code}/misc/{team_name}-Match-Logs"
-COMPS_GAMES_URL = "https://fbref.com/en/squads/{fbref_id}/2023-2024/matchlogs/all_comps/misc/{team_name}-Match-Logs-All-Competitions"
+COMPS_URL = "https://fbref.com/en/squads/{fbref_id}/2025-2026/all_comps/{team_name}-Stats-All-Competitions"
+LGE_GAMES_URL = "https://fbref.com/en/squads/{fbref_id}/2025-2026/matchlogs/{lge_code}/misc/{team_name}-Match-Logs"
+COMPS_GAMES_URL = "https://fbref.com/en/squads/{fbref_id}/2025-2026/matchlogs/all_comps/misc/{team_name}-Match-Logs-All-Competitions"
 NATIONALITIES_URL = (
     "https://fbref.com/en/comps/{lge_code}/nations/{lge_name}-Nationalities"
 )
@@ -25,7 +26,10 @@ def get_goals(url):
     chrome_options = uc.ChromeOptions()
     chrome_options.add_argument("--disable-extensions")
     chrome_options.add_argument("--headless")
-    driver = uc.Chrome(chrome_options=chrome_options)
+    driver_path = ChromeDriverManager().install()
+    driver = uc.Chrome(
+        driver_executable_path=driver_path, chrome_options=chrome_options
+    )
 
     driver.get(url)
 
@@ -180,24 +184,24 @@ def get_nationalities_data():
 
         df_times = df_times.tail(10)
 
-        df_goals = get_goals(GOALS_URL.format(lge_code=lge_code, lge_name=lge_name))
+        # df_goals = get_goals(GOALS_URL.format(lge_code=lge_code, lge_name=lge_name))
 
-        if lge != "ucl" and lge != "uel":
-            df_total_goals = pd.concat([df_total_goals, df_goals], ignore_index=True)
+        # if lge != "ucl" and lge != "uel":
+        #     df_total_goals = pd.concat([df_total_goals, df_goals], ignore_index=True)
 
-        df_sum = df_goals.groupby("Nation")["Goals"].sum().reset_index()
-        df_sum = df_sum.sort_values(by=["Goals"])
-        df_sum = df_sum.tail(10)
+        # df_sum = df_goals.groupby("Nation")["Goals"].sum().reset_index()
+        # df_sum = df_sum.sort_values(by=["Goals"])
+        # df_sum = df_sum.tail(10)
 
-        for i, row in df_sum.iterrows():
-            country = COUNTRIES.get(df_sum.at[i, "Nation"])
-            if country:
-                df_sum.at[i, "Nation"] = country
+        # for i, row in df_sum.iterrows():
+        #     country = COUNTRIES.get(df_sum.at[i, "Nation"])
+        #     if country:
+        #         df_sum.at[i, "Nation"] = country
 
         file_path = f"csvs/{lge}"
         df_players.to_csv(os.path.join(file_path, "league_players.csv"))
         df_times.to_csv(os.path.join(file_path, "league_times.csv"))
-        df_sum.to_csv(os.path.join(file_path, "league_goals.csv"))
+        # df_sum.to_csv(os.path.join(file_path, "league_goals.csv"))
 
     df_total_players = df_total_players.groupby("Nation", as_index=False).sum()
     df_total_players = df_total_players.sort_values(by=["# Players"])
@@ -207,9 +211,9 @@ def get_nationalities_data():
     df_total_times = df_total_times.sort_values(by=["Min"])
     df_total_times = df_total_times.tail(10)
 
-    df_total_goals = df_total_goals.groupby("Nation", as_index=False).sum()
-    df_total_goals = df_total_goals.sort_values(by=["Goals"])
-    df_total_goals = df_total_goals.tail(10)
+    # df_total_goals = df_total_goals.groupby("Nation", as_index=False).sum()
+    # df_total_goals = df_total_goals.sort_values(by=["Goals"])
+    # df_total_goals = df_total_goals.tail(10)
 
     for i, row in df_total_goals.iterrows():
         country = COUNTRIES.get(df_total_goals.at[i, "Nation"])
@@ -298,6 +302,6 @@ def get_data():
             os.makedirs(f"csvs/{lge}")
 
     get_teams_data()
-    get_nationalities_data()
-    combine_data()
-    get_keeper_data()
+    # get_nationalities_data()
+    # combine_data()
+    # get_keeper_data()
