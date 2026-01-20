@@ -304,7 +304,7 @@ def plt_minutes_all(df, lge, comp):
     fig.text(
         x=0.15,
         y=0.91,
-        s=f"Minutes Played 2023/2024 {comp_description}",
+        s=f"Minutes Played 2025/2026 {comp_description}",
         ha="left",
         va="bottom",
         weight="bold",
@@ -469,7 +469,7 @@ def plt_minutes_lges(df, label):
     fig.text(
         x=0.15,
         y=0.91,
-        s=f"Europe's Top 5 Leagues 2023/2024 {comp_description}",
+        s=f"Europe's Top 5 Leagues 2025/2026 {comp_description}",
         ha="left",
         va="bottom",
         weight="bold",
