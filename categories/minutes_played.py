@@ -4,8 +4,6 @@ from plots.plots_minutes import plt_minutes, plt_minutes_all, plt_minutes_lges
 def get_num_matches(df):
     return len(df.index) - 1
 
-    
-
 
 def get_minutes(df):
     df = df[
@@ -23,7 +21,7 @@ def get_minutes(df):
         ]
     ]
     df["Min"] = df["Min"].astype(float)
-    df = df[df["Min"] >= 400].reset_index(drop=True)
+    # df = df[df["Min"] >= 400].reset_index(drop=True)
     df = df.sort_values(by="Min").reset_index(drop=True)
     df = df[~df["Pos"].isna()]
     df["Nation"] = [x.split(" ")[1].lower() for x in df["Nation"]]
